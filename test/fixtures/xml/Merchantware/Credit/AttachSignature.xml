@@ -1,0 +1,12 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <AttachSignatureResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
+         <AttachSignatureResult>
+            <UploadStatus>ACCEPTED</UploadStatus>
+            <Token>608957</Token>
+            <TransactionDate>3/14/2016 7:57:32 PM</TransactionDate>
+            <ErrorMessage/>
+         </AttachSignatureResult>
+      </AttachSignatureResponse>
+   </soap:Body>
+</soap:Envelope>

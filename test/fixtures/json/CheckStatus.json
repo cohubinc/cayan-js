@@ -1,0 +1,12 @@
+{
+  "Status": "Online",
+  "CurrentScreen": "00",
+  "ResponseMessage": "",
+  "SerialNumber": "WSC00000000",
+  "ApplicationVersion": "H1.0.1.68",
+  "OSVersion": "7.0",
+  "AdditionalParameters": {
+    "PaymentDataCaptured": false,
+    "RemoveEMVCard": false
+  }
+}

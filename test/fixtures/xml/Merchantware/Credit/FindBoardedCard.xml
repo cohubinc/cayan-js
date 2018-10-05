@@ -1,0 +1,17 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FindBoardedCardResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
+         <FindBoardedCardResult>
+            <CardNumber>0026</CardNumber>
+            <ExpirationDate>1218</ExpirationDate>
+            <Cardholder/>
+            <CardType>4</CardType>
+            <AvsStreetAddress>1 Federal Street</AvsStreetAddress>
+            <AvsZipCode>02110</AvsZipCode>
+            <ErrorCode/>
+            <ErrorMessage/>
+            <Rfmiq>10000ABCDE</Rfmiq>
+         </FindBoardedCardResult>
+      </FindBoardedCardResponse>
+   </soap:Body>
+</soap:Envelope>

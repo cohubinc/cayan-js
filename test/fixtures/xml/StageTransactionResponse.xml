@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <CreateTransactionResponse xmlns="http://transport.merchantware.net/v4/">
+      <CreateTransactionResult>
+        <TransportKey>d4e59cb1-e5d9-49bf-a6b9-b8284a8709c3</TransportKey>
+        <ValidationKey>486c4b4d-dc0f-48c3-856a-81d70591d089</ValidationKey>
+        <Messages />
+      </CreateTransactionResult>
+    </CreateTransactionResponse>
+  </soap:Body>
+</soap:Envelope>
