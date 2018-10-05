@@ -4,8 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "tsc && mocha -r ts-node/register test/**/*.ts"
+    "build": "tsc && cp -R src/wsdl lib/wsdl",
+    "test": "npm run build && mocha -r ts-node/register test/**/*.ts"
   },
   "author": "",
   "license": "ISC",

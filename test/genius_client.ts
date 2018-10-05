@@ -5,6 +5,7 @@ import fs from "fs";
 import {
   ITransportRequest,
   IStageTransactionResult,
+  IInitiateTransactionResult,
   ICheckStatusResponse,
   CEDScreen,
   ExternalPaymentTypes,
@@ -66,6 +67,29 @@ describe("GeniusClient", () => {
       expect(result.TransportKey).to.equal(
         "d4e59cb1-e5d9-49bf-a6b9-b8284a8709c3"
       );
+    });
+  });
+
+  describe("InitiateTransaction", () => {
+    it("prompts the customer to select the payment type and complete the transaction", async () => {
+      const TransportKey = "cc604260-4b07-494a-865d-f228c8780eb3";
+      nock(CEDUrl)
+        .get("/v2/pos")
+        .query({
+          TransportKey,
+          Format: "JSON"
+        })
+        .reply(
+          200,
+          fs.readFileSync(__dirname + "/fixtures/json/InitiateTransaction.json")
+        );
+
+      const result: IInitiateTransactionResult = await client.InitiateTransaction(
+        TransportKey
+      );
+
+      expect(result.Status).to.equal("APPROVED");
+      expect(result.AmountApproved).to.equal("1.00");
     });
   });
 

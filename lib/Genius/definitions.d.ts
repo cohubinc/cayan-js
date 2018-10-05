@@ -13,6 +13,51 @@ export interface IStageTransactionResult {
     ValidationKey?: string;
     Messages?: IErrorMessage[];
 }
+export declare enum TransactionTypes {
+    "SALE" = "SALE",
+    "AUTHORIZATION" = "AUTHORIZATION",
+    "REFUND" = "REFUND",
+    "ADDVALUE" = "ADDVALUE",
+    "BALANCEINQUIRY" = "BALANCEINQUIRY"
+}
+export declare enum PaymentTypes {
+    "VISA" = "VISA",
+    "MASTERCARD" = "MASTERCARD",
+    "AMEX" = "AMEX",
+    "DISCOVER" = "DISCOVER",
+    "DEBIT" = "DEBIT",
+    "GIFT" = "GIFT",
+    "EBT" = "EBT",
+    "LEVELUP" = "LEVELUP",
+    "VOYAGER" = "VOYAGER",
+    "WEX" = "WEX",
+    "JCB" = "JCB",
+    "CUP" = "CUP",
+    "UNKNOWN" = "UNKNOWN"
+}
+export declare enum EntryModes {
+    "SWIPE" = "SWIPE",
+    "PROXIMITY" = "PROXIMITY",
+    "BARCODE" = "BARCODE",
+    "MANUAL" = "MANUAL"
+}
+export interface IInitiateTransactionResult {
+    Status: string;
+    AmountApproved: string;
+    AuthorizationCode: string;
+    Cardholder: string;
+    AccountNumber: string;
+    PaymentType: PaymentTypes;
+    EntryMode: EntryModes;
+    ErrorMessage: string;
+    Token: string;
+    TransactionDate: string;
+    TransactionType: TransactionTypes;
+    ResponseType: "SINGLE" | "MULTI" | "COMPOUND";
+    ValidationKey: string;
+    AdditionalParameters: any;
+    EMV: any;
+}
 export interface ITransportRequest {
     TransactionType: "SALE" | "_REFUND" | "LEVEL2SALE" | "PREAUTH" | "FORCESALE" | "ADDVALUE" | "BALANCEINQUIRY";
     ClerkId: string;

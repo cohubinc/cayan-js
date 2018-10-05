@@ -8,13 +8,18 @@ export default class GeniusClient<IGeniusClient> {
     StageTransaction(transportRequest: ITransportRequest): Promise<IStageTransactionResult>;
     /**
      * Check the status of the CED
+     * @param TransportKey - The transport key from the StageTransaction response
+     */
+    InitiateTransaction(TransportKey: string): Promise<any>;
+    /**
+     * Check the status of the CED
      */
     CheckStatus(): Promise<ICheckStatusResponse>;
     /**
      * Start an order
-     * @param order - The order or invoice number associated with the transaction.
+     * @param Order - The order or invoice number associated with the transaction.
      */
-    StartOrder(order: string): Promise<IStartOrderResponse>;
+    StartOrder(Order: string): Promise<IStartOrderResponse>;
     /**
      * End the currently displayed order using an alternate payment method. See ExternalPaymentTypes
      * @param order - The order or invoice number associated with the transaction

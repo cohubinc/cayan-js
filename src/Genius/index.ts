@@ -18,7 +18,8 @@ import {
   IDeleteItemResponse,
   IDeleteAllItemsResponse,
   IUpdateItemResponse,
-  IUpdateTotalResponse
+  IUpdateTotalResponse,
+  IInitiateTransactionResult
 } from "./definitions";
 import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
@@ -60,6 +61,16 @@ export default class GeniusClient<IGeniusClient> {
 
   /**
    * Check the status of the CED
+   * @param TransportKey - The transport key from the StageTransaction response
+   */
+  async InitiateTransaction(TransportKey: string): Promise<any> {
+    const url = this.makeUrl({ TransportKey, Format: "JSON" });
+
+    return (await fetch(url).then(r => r.json())) as IInitiateTransactionResult;
+  }
+
+  /**
+   * Check the status of the CED
    */
   async CheckStatus(): Promise<ICheckStatusResponse> {
     const url = this.makeUrl({ Action: "Status", Format: "JSON" });
@@ -69,13 +80,13 @@ export default class GeniusClient<IGeniusClient> {
 
   /**
    * Start an order
-   * @param order - The order or invoice number associated with the transaction.
+   * @param Order - The order or invoice number associated with the transaction.
    */
-  async StartOrder(order: string): Promise<IStartOrderResponse> {
+  async StartOrder(Order: string): Promise<IStartOrderResponse> {
     const url = this.makeUrl({
       Action: "StartOrder",
       Format: "JSON",
-      Order: order
+      Order
     });
 
     return await fetch(url).then(r => r.json());
