@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+  xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <AddValueResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/45/Giftcard">
+      <AddValueResult>
+        <ApprovalStatus>APPROVED</ApprovalStatus>
+        <ResponseMessage>928061</ResponseMessage>
+        <Token>MC0110</Token>
+        <InvoiceNumber>Transaction1000</InvoiceNumber>
+        <TransactionDate>10/10/2008 1:13:55 PM</TransactionDate>
+        <ExpirationDate>080729</ExpirationDate>
+        <CardNumber>***********3456</CardNumber>
+        <ReaderEntryMode>2</ReaderEntryMode>
+        <Gift>
+          <ApprovedAmount>1.29</ApprovedAmount>
+          <RequestedAmount>1.29</RequestedAmount>
+          <RedeemableBalance>100.00</RedeemableBalance>
+        </Gift>
+      </AddValueResult>
+    </AddValueResponse>
+  </soap:Body>
+</soap:Envelope>
