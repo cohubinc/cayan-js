@@ -1060,14 +1060,7 @@ var WSDL = function(definition, uri, options) {
     );
   }
 
-  var breakupFunc;
-  if (typeof process == "undefined") {
-    breakupFunc = setImmediate;
-  } else {
-    breakupFunc = process.nextTick;
-  }
-
-  breakupFunc(function() {
+  setImmediate(function() {
     try {
       fromFunc.call(self, definition);
     } catch (e) {
