@@ -1,5 +1,4 @@
 import {
-  IGeniusClient,
   IGeniusConfig,
   ExternalPaymentTypes,
   IAddItemParameters,
@@ -25,7 +24,7 @@ import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
 import CreateSoapClientWithWSDL from "../CreateSoapClientWithWSDL";
 
-export default class GeniusClient<IGeniusClient> {
+export default class GeniusClient {
   config: IGeniusConfig;
   soapClient: any;
 

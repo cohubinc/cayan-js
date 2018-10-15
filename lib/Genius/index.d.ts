@@ -1,10 +1,10 @@
 import { IGeniusConfig, ExternalPaymentTypes, IAddItemParameters, IDiscountItemParameters, IDeleteItemParameters, IDeleteAllItemsParameters, IUpdateItemParameters, IUpdateTotalParams, ITransportRequest, ICheckStatusResponse, IStageTransactionResult, IStartOrderResponse, IEndOrderResponse, IAddItemResponse, IDiscountItemResponse, IDeleteItemResponse, IDeleteAllItemsResponse, IUpdateItemResponse, IUpdateTotalResponse } from "./definitions";
 import "fetch-everywhere";
-export default class GeniusClient<IGeniusClient> {
+export default class GeniusClient {
     config: IGeniusConfig;
     soapClient: any;
     constructor(config: IGeniusConfig);
-    static createInstance(config: IGeniusConfig): Promise<GeniusClient<{}>>;
+    static createInstance(config: IGeniusConfig): Promise<GeniusClient>;
     StageTransaction(transportRequest: ITransportRequest): Promise<IStageTransactionResult>;
     /**
      * Check the status of the CED
