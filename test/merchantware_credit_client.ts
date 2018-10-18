@@ -11,7 +11,8 @@ import {
   ICaptureRequest,
   IVaultTokenRequest,
   CardType,
-  IUpdateBoardedCardRequest
+  IUpdateBoardedCardRequest,
+  ISaleRequest
 } from "../lib/Merchantware/Credit/definitions";
 
 describe("MerchantwareCreditClient", () => {
@@ -156,7 +157,6 @@ describe("MerchantwareCreditClient", () => {
 
       expect(result.ApprovalStatus).to.equal("APPROVED");
       expect(result.Token).to.equal("608961");
-      expect(result.Token).to.equal("608961");
       expect(result.AuthorizationCode).to.equal("OK036C");
       expect(result.TransactionDate).to.equal("3/14/2016 8:09:31 PM");
       expect(result.Amount).to.equal("1.50");
@@ -202,6 +202,51 @@ describe("MerchantwareCreditClient", () => {
       const result = await client.UpdateBoardedCard(request);
     });
   });
+
+  describe("Sale", () => {
+    it("Creates a sale", async () => {
+      const request: ISaleRequest = {
+        Amount: 1.05,
+        CashbackAmount: 0.0,
+        SurchargeAmount: 0.0,
+        TaxAmount: 0.0,
+        InvoiceNumber: "1556",
+        PurchaseOrderNumber: "17801",
+        CustomerCode: "20",
+        RegisterNumber: "35",
+        MerchantTransactionId: "166901",
+        CardAcceptorTerminalId: "3",
+        EnablePartialAuthorization: false,
+        ForceDuplicate: false
+      };
+
+      stubSoap(SaleXML).reply(
+        201,
+        fs.readFileSync(
+          __dirname + "/fixtures/xml/Merchantware/Credit/Sale.xml"
+        )
+      );
+
+      const result = await client.Sale(request);
+
+      expect(result.ApprovalStatus).to.equal("APPROVED");
+      expect(result.Token).to.equal("608957");
+      expect(result.AuthorizationCode).to.equal("OK775C");
+      expect(result.TransactionDate).to.equal("3/14/2016 7:57:22 PM");
+      expect(result.Amount).to.equal("1.05");
+      expect(result.RemainingCardBalance).to.equal("");
+      expect(result.CardNumber).to.equal("************0026");
+      expect(result.Cardholder).to.equal("John Doe");
+      expect(result.CardType).to.equal("4");
+      expect(result.FsaCard).to.equal("");
+      expect(result.ReaderEntryMode).to.equal("1");
+      expect(result.AvsResponse).to.equal("Y");
+      expect(result.CvResponse).to.be.equal("");
+      expect(result.ErrorMessage).to.equal("");
+      expect(result.ExtraData).to.equal("");
+      expect(result.Rfmiq).to.equal("10000ABCDE");
+    });
+  });
 });
 
 const AdjustTipXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><AdjustTip xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><Amount>1.00</Amount><Token>1236559</Token></Request></AdjustTip></soap:Body></soap:Envelope>`;
@@ -211,3 +256,4 @@ const BoardCardXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns
 const CaptureXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><Capture xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><Token>608939</Token><Amount>1.50</Amount><InvoiceNumber>1556</InvoiceNumber><RegisterNumber>35</RegisterNumber><MerchantTransactionId>167902</MerchantTransactionId><CardAcceptorTerminalId>3</CardAcceptorTerminalId></Request></Capture></soap:Body></soap:Envelope>`;
 const FindBoardedCardXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><FindBoardedCard xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><VaultToken>127MMEIIQVEW2WSZECPL</VaultToken></Request></FindBoardedCard></soap:Body></soap:Envelope>`;
 const UpdateBoardedCardXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><UpdateBoardedCard xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><VaultToken>127MMEIIQVEW2WSZECPL</VaultToken><ExpirationDate>0118</ExpirationDate></Request></UpdateBoardedCard></soap:Body></soap:Envelope>`;
+const SaleXML = `<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" xmlns:tns=\"http://schemas.merchantwarehouse.com/merchantware/v45/\"><soap:Body><Sale xmlns=\"http://schemas.merchantwarehouse.com/merchantware/v45/\"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><Amount>1.05</Amount><CashbackAmount>0</CashbackAmount><SurchargeAmount>0</SurchargeAmount><TaxAmount>0</TaxAmount><InvoiceNumber>1556</InvoiceNumber><PurchaseOrderNumber>17801</PurchaseOrderNumber><CustomerCode>20</CustomerCode><RegisterNumber>35</RegisterNumber><MerchantTransactionId>166901</MerchantTransactionId><CardAcceptorTerminalId>3</CardAcceptorTerminalId><EnablePartialAuthorization>false</EnablePartialAuthorization><ForceDuplicate>false</ForceDuplicate></Request></Sale></soap:Body></soap:Envelope>`;

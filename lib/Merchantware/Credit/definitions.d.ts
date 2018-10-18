@@ -23,6 +23,14 @@ export declare enum CardType {
     "China Union Pay" = "11",
     "LevelUp" = "12"
 }
+declare enum DebitOrCreditIndicator {
+    Credit = "Credit",
+    Debit = "Debit"
+}
+declare enum NetOrGrossIndicator {
+    Net = "Net",
+    Gross = "Gross"
+}
 export interface ITipRequest {
     Amount: string;
     Token: string;
@@ -33,17 +41,18 @@ export interface ISignatureRequest {
 }
 export interface IAuthorizationRequest {
     Amount: string;
-    CardAcceptorTerminalId: string;
-    MerchantTransactionId: string;
+    CardAcceptorTerminalId?: string;
+    MerchantTransactionId?: string;
     RegisterNumber: string;
+    invoice?: IInvoice;
 }
 export interface ICaptureRequest {
     Token: string;
     Amount: string;
     InvoiceNumber: string;
     RegisterNumber: string;
-    MerchantTransactionId: string;
-    CardAcceptorTerminalId: string;
+    MerchantTransactionId?: string;
+    CardAcceptorTerminalId?: string;
 }
 export interface IUpdateBoardedCardRequest {
     VaultToken: string;
@@ -115,3 +124,58 @@ export interface IVaultTokenResponse45 {
     ErrorMessage: string;
     Rfmiq: string;
 }
+export interface ISaleRequest {
+    Amount: number;
+    CashbackAmount?: number;
+    SurchargeAmount?: number;
+    TaxAmount?: number;
+    HealthCareAmountDetails?: IHealthCareAmountDetails;
+    InvoiceNumber?: string;
+    PurchaseOrderNumber?: string;
+    CustomerCode?: string;
+    RegisterNumber?: string;
+    MerchantTransactionId?: string;
+    CardAcceptorTerminalId?: string;
+    EnablePartialAuthorization?: boolean;
+    ForceDuplicate?: boolean;
+    Invoice?: IInvoice;
+}
+export interface IInvoice {
+    TaxIndicator: TaxIndicator;
+    ProductDescription: string;
+    DiscountAmount: number;
+    ShippingAmount: number;
+    DutyAmount: number;
+    DestinationPostalCode: string;
+    DestinationCountryCode: string;
+    ShipFromPostalCode: string;
+    LineItems: ILineItem[];
+}
+export declare enum TaxIndicator {
+    NotProvided = "NotProvided",
+    Provided = "Provided",
+    Exempt = "Exempt"
+}
+export interface ILineItem {
+    CommodityCode: string;
+    Description: string;
+    Upc: string;
+    Quantity: number;
+    UnitOfMeasure: string;
+    UnitCost: number;
+    DiscountAmount: number;
+    TotalAmount: number;
+    TaxAmount: number;
+    ExtendedAmount: number;
+    DebitOrCreditIndicator: DebitOrCreditIndicator;
+    NetOrGrossIndicator: NetOrGrossIndicator;
+}
+export interface IHealthCareAmountDetails {
+    CopayAmount: number;
+    ClinicalAmount: number;
+    DentalAmount: number;
+    HealthCareTotalAmount: number;
+    PrescriptionAmount: number;
+    VisionAmount: number;
+}
+export {};

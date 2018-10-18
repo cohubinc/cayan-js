@@ -11,7 +11,8 @@ import {
   ICaptureRequest,
   IVaultTokenRequest,
   IVaultTokenResponse45,
-  IUpdateBoardedCardRequest
+  IUpdateBoardedCardRequest,
+  ISaleRequest
 } from "./definitions";
 import CreditWSDL from "./CreditWSDL";
 import CreateSoapClientWithWSDL from "../../CreateSoapClientWithWSDL";
@@ -99,5 +100,11 @@ export default class MerchantwareCreditClient {
     const args = this.withCredentials({ Request });
     const result = await this.soapClient.UpdateBoardedCardAsync(args);
     return result[0].UpdateBoardedCardResult;
+  }
+
+  async Sale(Request: ISaleRequest): Promise<ITransactionResponse45> {
+    const args = this.withCredentials({ Request });
+    const result = await this.soapClient.SaleAsync(args);
+    return result[0].SaleResult;
   }
 }
