@@ -102,8 +102,11 @@ export default class MerchantwareCreditClient {
     return result[0].UpdateBoardedCardResult;
   }
 
-  async Sale(Request: ISaleRequest): Promise<ITransactionResponse45> {
-    const args = this.withCredentials({ Request });
+  async Sale(
+    PaymentData: IPaymentData,
+    Request: ISaleRequest
+  ): Promise<ITransactionResponse45> {
+    const args = this.withCredentials({ PaymentData, Request });
     const result = await this.soapClient.SaleAsync(args);
     return result[0].SaleResult;
   }

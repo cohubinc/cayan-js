@@ -13,5 +13,5 @@ export default class MerchantwareCreditClient {
     Capture(Request: ICaptureRequest): Promise<ITransactionResponse45>;
     FindBoardedCard(Request: IVaultTokenRequest): Promise<IVaultTokenResponse45>;
     UpdateBoardedCard(Request: IUpdateBoardedCardRequest): Promise<IVaultBoardingResponse45>;
-    Sale(Request: ISaleRequest): Promise<ITransactionResponse45>;
+    Sale(PaymentData: IPaymentData, Request: ISaleRequest): Promise<ITransactionResponse45>;
 }
