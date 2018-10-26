@@ -3,10 +3,7 @@
 A Javascript library for talking to the Cayan APIs
 
 [![Build Status](https://travis-ci.org/cohubinc/cayan-js.svg?branch=master)](https://travis-ci.org/cohubinc/cayan-js)
-
-<!-- [![NPM Version][npm-image]][npm-url]
-[![Linux Build][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url] -->
+[![npm version](https://badge.fury.io/js/cayan.svg)](https://badge.fury.io/js/cayan)
 
 ## Install
 
