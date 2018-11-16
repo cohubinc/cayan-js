@@ -117,7 +117,7 @@ describe("GeniusClient", () => {
   describe("StartOrder", () => {
     it("initiates the line item display screen and the start of the transaction", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({ Action: "StartOrder", Order: "1000", Format: "JSON" })
         .reply(
           200,
@@ -131,7 +131,7 @@ describe("GeniusClient", () => {
   describe("EndOrder", () => {
     it("completes the line item display for transactions completed outside of the Genius CED", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "EndOrder",
           Order: "1000",
@@ -151,7 +151,7 @@ describe("GeniusClient", () => {
   describe("Cancel", () => {
     it("sends a request to the CED to cancel the current transaction", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "Cancel",
           Format: "JSON"
@@ -166,7 +166,7 @@ describe("GeniusClient", () => {
   describe("AddItem", () => {
     it("adds an item to the line display screen and display updated data for tax and total amounts", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "AddItem",
           Order: "1000",
@@ -206,7 +206,7 @@ describe("GeniusClient", () => {
   describe("DiscountItem", () => {
     it("add a discount line item to the display screen and display updated data for tax and total amounts.", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "DiscountItem",
           TargetItemID: "1",
@@ -251,7 +251,7 @@ describe("GeniusClient", () => {
   describe("DeleteItem", () => {
     it("deletes an item from the items list", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Order: "1000",
           TargetItemID: "1",
@@ -279,7 +279,7 @@ describe("GeniusClient", () => {
   describe("DeleteAllItems", () => {
     it("deletes all items from the items list", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Order: "1000",
           Action: "DeleteAllItems",
@@ -307,7 +307,7 @@ describe("GeniusClient", () => {
   describe("UpdateItem", () => {
     it("updates an existing item", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "UpdateItem",
           TargetItemID: "1",
@@ -351,7 +351,7 @@ describe("GeniusClient", () => {
   describe("UpdateTotal", () => {
     it("updates the order totals without adding/removing items", async () => {
       nock(CEDUrl)
-        .get("/v2/pos")
+        .get("/v1/pos")
         .query({
           Action: "UpdateTotal",
           Order: "1000",

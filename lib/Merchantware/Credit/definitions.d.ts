@@ -40,10 +40,10 @@ export interface IAuthorizationRequest {
 export interface ICaptureRequest {
     Token: string;
     Amount: string;
-    InvoiceNumber: string;
-    RegisterNumber: string;
-    MerchantTransactionId: string;
-    CardAcceptorTerminalId: string;
+    InvoiceNumber?: string;
+    RegisterNumber?: string;
+    MerchantTransactionId?: string;
+    CardAcceptorTerminalId?: string;
 }
 export interface IUpdateBoardedCardRequest {
     VaultToken: string;

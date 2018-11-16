@@ -25,7 +25,7 @@ import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
 import CreateSoapClientWithWSDL from "../CreateSoapClientWithWSDL";
 
-export default class GeniusClient<IGeniusClient> {
+export default class GeniusClient {
   config: IGeniusConfig;
   soapClient: any;
 
@@ -64,8 +64,10 @@ export default class GeniusClient<IGeniusClient> {
    * @param TransportKey - The transport key from the StageTransaction response
    */
   async InitiateTransaction(TransportKey: string): Promise<any> {
-    const url = this.makeUrl({ TransportKey, Format: "JSON" });
-
+    const params = { TransportKey, Format: "JSON" };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
+    console.log(url);
     return (await fetch(url).then(r => r.json())) as IInitiateTransactionResult;
   }
 
@@ -73,9 +75,25 @@ export default class GeniusClient<IGeniusClient> {
    * Check the status of the CED
    */
   async CheckStatus(): Promise<ICheckStatusResponse> {
-    const url = this.makeUrl({ Action: "Status", Format: "JSON" });
-
+    const params = { Action: "Status", Format: "JSON" };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
+    console.log(url);
     return (await fetch(url).then(r => r.json())) as ICheckStatusResponse;
+  }
+
+  /**
+   * Initiates keyed entry on the CED
+   * @param
+   */
+  async InitiateKeyedEntry(
+    PaymentType: string = null
+  ): Promise<IStartOrderResponse> {
+    const params = { Action: "InitiateKeyedEntry", Format: "JSON" };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
+    return await fetch(url).then(r => r.json());
   }
 
   /**
@@ -83,12 +101,10 @@ export default class GeniusClient<IGeniusClient> {
    * @param Order - The order or invoice number associated with the transaction.
    */
   async StartOrder(Order: string): Promise<IStartOrderResponse> {
-    const url = this.makeUrl({
-      Action: "StartOrder",
-      Format: "JSON",
-      Order
-    });
-
+    const params = { Action: "StartOrder", Format: "JSON", Order };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -101,13 +117,15 @@ export default class GeniusClient<IGeniusClient> {
     order: string,
     externalPaymentType: ExternalPaymentTypes
   ): Promise<IEndOrderResponse> {
-    const url = this.makeUrl({
+    const params = {
       Action: "EndOrder",
       Format: "JSON",
       Order: order,
       ExternalPaymentType: externalPaymentType
-    });
-
+    };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -115,8 +133,10 @@ export default class GeniusClient<IGeniusClient> {
    * Cancels the current order and resets the screen back to an idle state
    */
   async Cancel(): Promise<any> {
-    const url = this.makeUrl({ Action: "Cancel", Format: "JSON" });
-
+    const params = { Action: "Cancel", Format: "JSON" };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -125,12 +145,10 @@ export default class GeniusClient<IGeniusClient> {
    * @param item - The item to be added to the order. See IAddItemParameters
    */
   async AddItem(item: IAddItemParameters): Promise<IAddItemResponse> {
-    const url = this.makeUrl({
-      Action: "AddItem",
-      Format: "JSON",
-      ...item
-    });
-
+    const params = { Action: "AddItem", Format: "JSON", ...item };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -141,12 +159,10 @@ export default class GeniusClient<IGeniusClient> {
   async DiscountItem(
     discountItem: IDiscountItemParameters
   ): Promise<IDiscountItemResponse> {
-    const url = this.makeUrl({
-      Action: "DiscountItem",
-      Format: "JSON",
-      ...discountItem
-    });
-
+    const params = { Action: "DiscountItem", Format: "JSON", ...discountItem };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -155,12 +171,10 @@ export default class GeniusClient<IGeniusClient> {
    * @param item - Item to be deleted from the list
    */
   async DeleteItem(item: IDeleteItemParameters): Promise<IDeleteItemResponse> {
-    const url = this.makeUrl({
-      Action: "DeleteItem",
-      Format: "JSON",
-      ...item
-    });
-
+    const params = { Action: "DeleteItem", Format: "JSON", ...item };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -169,14 +183,16 @@ export default class GeniusClient<IGeniusClient> {
    * @param params - order total and tax updates.
    */
   async DeleteAllItems(
-    params: IDeleteAllItemsParameters
+    deleteParams: IDeleteAllItemsParameters
   ): Promise<IDeleteAllItemsResponse> {
-    const url = this.makeUrl({
+    const params = {
       Action: "DeleteAllItems",
       Format: "JSON",
-      ...params
-    });
-
+      ...deleteParams
+    };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
     return await fetch(url).then(r => r.json());
   }
 
@@ -185,30 +201,22 @@ export default class GeniusClient<IGeniusClient> {
    * @param item - the item to be updated
    */
   async UpdateItem(item: IUpdateItemParameters): Promise<IUpdateItemResponse> {
-    const url = this.makeUrl({
-      Action: "UpdateItem",
-      Format: "JSON",
-      ...item
-    });
-
-    return await fetch(url).then(r => r.json());
-  }
-
-  async UpdateTotal(params: IUpdateTotalParams): Promise<IUpdateTotalResponse> {
-    const url = this.makeUrl({
-      Action: "UpdateTotal",
-      Format: "JSON",
-      ...params
-    });
-
-    return await fetch(url).then(r => r.json());
-  }
-
-  private makeUrl = (params: object) => {
+    const params = { Action: "UpdateItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
+    return await fetch(url).then(r => r.json());
+  }
 
-    return `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-  };
+  async UpdateTotal(
+    updateParams: IUpdateTotalParams
+  ): Promise<IUpdateTotalResponse> {
+    const params = { Action: "UpdateTotal", Format: "JSON", ...updateParams };
+    const queryString = makeQueryString(params);
+    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    console.log(url);
+    return await fetch(url).then(r => r.json());
+  }
 }
 
 function makeQueryString(obj: any): string {

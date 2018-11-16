@@ -1,10 +1,10 @@
 import { IGeniusConfig, ExternalPaymentTypes, IAddItemParameters, IDiscountItemParameters, IDeleteItemParameters, IDeleteAllItemsParameters, IUpdateItemParameters, IUpdateTotalParams, ITransportRequest, ICheckStatusResponse, IStageTransactionResult, IStartOrderResponse, IEndOrderResponse, IAddItemResponse, IDiscountItemResponse, IDeleteItemResponse, IDeleteAllItemsResponse, IUpdateItemResponse, IUpdateTotalResponse } from "./definitions";
 import "fetch-everywhere";
-export default class GeniusClient<IGeniusClient> {
+export default class GeniusClient {
     config: IGeniusConfig;
     soapClient: any;
     constructor(config: IGeniusConfig);
-    static createInstance(config: IGeniusConfig): Promise<GeniusClient<{}>>;
+    static createInstance(config: IGeniusConfig): Promise<GeniusClient>;
     StageTransaction(transportRequest: ITransportRequest): Promise<IStageTransactionResult>;
     /**
      * Check the status of the CED
@@ -15,6 +15,11 @@ export default class GeniusClient<IGeniusClient> {
      * Check the status of the CED
      */
     CheckStatus(): Promise<ICheckStatusResponse>;
+    /**
+     * Initiates keyed entry on the CED
+     * @param
+     */
+    InitiateKeyedEntry(PaymentType?: string): Promise<IStartOrderResponse>;
     /**
      * Start an order
      * @param Order - The order or invoice number associated with the transaction.
@@ -49,12 +54,11 @@ export default class GeniusClient<IGeniusClient> {
      * Delete all items from the order
      * @param params - order total and tax updates.
      */
-    DeleteAllItems(params: IDeleteAllItemsParameters): Promise<IDeleteAllItemsResponse>;
+    DeleteAllItems(deleteParams: IDeleteAllItemsParameters): Promise<IDeleteAllItemsResponse>;
     /**
      * Update a line item
      * @param item - the item to be updated
      */
     UpdateItem(item: IUpdateItemParameters): Promise<IUpdateItemResponse>;
-    UpdateTotal(params: IUpdateTotalParams): Promise<IUpdateTotalResponse>;
-    private makeUrl;
+    UpdateTotal(updateParams: IUpdateTotalParams): Promise<IUpdateTotalResponse>;
 }
