@@ -1,5 +1,4 @@
 import {
-  IGeniusClient,
   IGeniusConfig,
   ExternalPaymentTypes,
   IAddItemParameters,

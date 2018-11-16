@@ -1,5 +1,5 @@
 import { IMerchantCredentials } from "../../definitions";
-import { ITipRequest, ITransactionResponse45, ISignatureRequest, ISignatureResponse45, IAuthorizationRequest, IPaymentData, IVaultBoardingResponse45, ICaptureRequest, IVaultTokenRequest, IVaultTokenResponse45, IUpdateBoardedCardRequest } from "./definitions";
+import { ITipRequest, ITransactionResponse45, ISignatureRequest, ISignatureResponse45, IAuthorizationRequest, IPaymentData, IVaultBoardingResponse45, ICaptureRequest, IVaultTokenRequest, IVaultTokenResponse45, IUpdateBoardedCardRequest, ISaleRequest } from "./definitions";
 export default class MerchantwareCreditClient {
     config: IMerchantCredentials;
     soapClient: any;
@@ -13,4 +13,5 @@ export default class MerchantwareCreditClient {
     Capture(Request: ICaptureRequest): Promise<ITransactionResponse45>;
     FindBoardedCard(Request: IVaultTokenRequest): Promise<IVaultTokenResponse45>;
     UpdateBoardedCard(Request: IUpdateBoardedCardRequest): Promise<IVaultBoardingResponse45>;
+    Sale(PaymentData: IPaymentData, Request: ISaleRequest): Promise<ITransactionResponse45>;
 }

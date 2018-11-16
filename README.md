@@ -2,11 +2,10 @@
 
 A Javascript library for talking to the Cayan APIs
 
-<!-- [![NPM Version][npm-image]][npm-url]
-[![Linux Build][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url] -->
+[![Build Status](https://travis-ci.org/cohubinc/cayan-js.svg?branch=master)](https://travis-ci.org/cohubinc/cayan-js)
+[![npm version](https://badge.fury.io/js/cayan.svg)](https://badge.fury.io/js/cayan)
 
-## Install (not published yet)
+## Install
 
 ```bash
 yarn add cayan
@@ -306,9 +305,13 @@ const result = await genius.UpdateTotal({
 }
 ```
 
-<!-- ## License -->
+## License
 
-<!-- [MIT](http://vjpr.mit-license.org) -->
+[MIT](https://github.com/cohubinc/cayan-js/blob/master/MIT-LICENSE)
+
+## Disclaimer
+
+This software is not developed by or supported by Cayan & TSYS.
 
 [npm-image]: https://img.shields.io/npm/v/live-xxx.svg
 [npm-url]: https://npmjs.org/package/live-xxx
