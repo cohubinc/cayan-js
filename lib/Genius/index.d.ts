@@ -3,6 +3,7 @@ import "fetch-everywhere";
 export default class GeniusClient {
     config: IGeniusConfig;
     soapClient: any;
+    reportClient: any;
     constructor(config: IGeniusConfig);
     static createInstance(config: IGeniusConfig): Promise<GeniusClient>;
     StageTransaction(transportRequest: ITransportRequest): Promise<IStageTransactionResult>;
@@ -61,4 +62,8 @@ export default class GeniusClient {
      */
     UpdateItem(item: IUpdateItemParameters): Promise<IUpdateItemResponse>;
     UpdateTotal(updateParams: IUpdateTotalParams): Promise<IUpdateTotalResponse>;
+    /**
+     * DetailsByTransportKey
+     */
+    DetailsByTransportKey(TransportKey: string): Promise<any>;
 }

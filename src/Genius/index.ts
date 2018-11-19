@@ -22,11 +22,13 @@ import {
 } from "./definitions";
 import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
+import GeniusReportingWSDL from "./GeniusReportingWSDL";
 import CreateSoapClientWithWSDL from "../CreateSoapClientWithWSDL";
 
 export default class GeniusClient {
   config: IGeniusConfig;
   soapClient: any;
+  reportClient: any;
 
   constructor(config: IGeniusConfig) {
     this.config = config;
@@ -40,7 +42,13 @@ export default class GeniusClient {
       "https://transport.merchantware.net/v4/transportService.asmx"
     );
 
+    const reportClient = await CreateSoapClientWithWSDL(
+      GeniusReportingWSDL,
+      "https://genius.merchantware.net/v1/Reporting.asmx"
+    );
+
     client.soapClient = soapClient;
+    client.reportClient = reportClient;
 
     return client;
   }
@@ -215,6 +223,20 @@ export default class GeniusClient {
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
     console.log(url);
     return await fetch(url).then(r => r.json());
+  }
+
+  /**
+   * DetailsByTransportKey
+   */
+  async DetailsByTransportKey(TransportKey: string) {
+    const args = {
+      Name: this.config.MerchantName,
+      SiteID: this.config.MerchantSiteId,
+      Key: this.config.MerchantKey,
+      TransportKey
+    };
+    const result = await this.reportClient.DetailsByTransportKeyAsync(args);
+    return result[0].DetailsByTransportKeyResult;
   }
 }
 
