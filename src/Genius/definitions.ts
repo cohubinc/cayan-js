@@ -83,6 +83,8 @@ export interface ITransportRequest {
   OrderNumber: string;
   TaxAmount: number;
   TerminalId?: string;
+  PoNumber?: string;
+  CustomerCode?: string;
 }
 
 export interface IStartOrderParameters {
