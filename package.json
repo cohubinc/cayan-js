@@ -1,6 +1,6 @@
 {
   "name": "cayan",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Javascript library for Cayan API's",
   "main": "lib/index.js",
   "scripts": {
