@@ -1,5 +1,5 @@
 import { GeniusClient } from "../lib";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import nock from "nock";
 import fs from "fs";
 import {
@@ -8,7 +8,6 @@ import {
   ExternalPaymentTypes,
   CEDBoolean
 } from "../lib/Genius/definitions";
-import { fail } from "assert";
 
 describe("GeniusClient", () => {
   const config = {
@@ -61,7 +60,7 @@ describe("GeniusClient", () => {
 
       const result = await client.StageTransaction(transaction);
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -112,7 +111,7 @@ describe("GeniusClient", () => {
       const result = await client.InitiateTransaction(TransportKey);
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -146,7 +145,7 @@ describe("GeniusClient", () => {
       const result = await client.CheckStatus();
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -182,7 +181,7 @@ describe("GeniusClient", () => {
       const result = await client.StartOrder("1000");
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -217,7 +216,7 @@ describe("GeniusClient", () => {
 
       const result = await client.EndOrder("1000", ExternalPaymentTypes.Cash);
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -252,7 +251,7 @@ describe("GeniusClient", () => {
 
       const result = await client.Cancel();
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -309,7 +308,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -396,7 +395,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -469,7 +468,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -525,7 +524,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -597,7 +596,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 
@@ -667,7 +666,7 @@ describe("GeniusClient", () => {
       });
 
       if (result instanceof Error) {
-        fail("Result is an error");
+        assert(false, "Result is an error");
         return;
       }
 

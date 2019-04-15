@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import nock from "nock";
 import fs from "fs";
 import { MerchantwareCreditClient } from "../lib";
@@ -57,10 +57,22 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.AdjustTip(request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.ApprovalStatus).to.equal("APPROVED");
       expect(result.Token).to.equal("1236560");
       expect(result.TransactionDate).to.equal("3/14/2016 7:54:23 PM");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      stubSoap(AdjustTipXML).reply(500, null);
+
+      const request: ITipRequest = { Amount: "1.00", Token: "1236559" };
+      const result = await client.AdjustTip(request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -79,10 +91,25 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.AttachSignature(request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.UploadStatus).to.equal("ACCEPTED");
       expect(result.Token).to.equal("608957");
       expect(result.TransactionDate).to.equal("3/14/2016 7:57:32 PM");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      stubSoap(AttachSignatureXML).reply(500, null);
+
+      const request: ISignatureRequest = {
+        Token: "608957",
+        ImageData: "10,10^110,110^0,65535^10,110^110,10^0,65535^~"
+      };
+      const result = await client.AttachSignature(request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -109,8 +136,32 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.Authorize(paymentData, transaction);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.ApprovalStatus).to.equal("APPROVED");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const paymentData: IPaymentData = {
+        Source: "KEYED",
+        CardNumber: "4012000033330026",
+        ExpirationDate: "1219"
+      };
+
+      const transaction: IAuthorizationRequest = {
+        Amount: "1.01",
+        RegisterNumber: "1",
+        CardAcceptorTerminalId: "1",
+        MerchantTransactionId: "1000"
+      };
+
+      stubSoap(AuthorizeXML).reply(500, null);
+
+      const result = await client.Authorize(paymentData, transaction);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -130,8 +181,25 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.BoardCard(paymentData);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.VaultToken).to.equal("1000000000002WSZECPL");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const paymentData: IPaymentData = {
+        Source: "KEYED",
+        CardNumber: "4012000033330026",
+        ExpirationDate: "1219"
+      };
+
+      stubSoap(BoardCardXML).reply(500, null);
+
+      const result = await client.BoardCard(paymentData);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -154,6 +222,10 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.Capture(request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.ApprovalStatus).to.equal("APPROVED");
       expect(result.Token).to.equal("608961");
@@ -161,6 +233,22 @@ describe("MerchantwareCreditClient", () => {
       expect(result.TransactionDate).to.equal("3/14/2016 8:09:31 PM");
       expect(result.Amount).to.equal("1.50");
       expect(result.ReaderEntryMode).to.equal("3");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const request: ICaptureRequest = {
+        Token: "608939",
+        Amount: "1.50",
+        InvoiceNumber: "1556",
+        RegisterNumber: "35",
+        MerchantTransactionId: "167902",
+        CardAcceptorTerminalId: "3"
+      };
+
+      stubSoap(CaptureXML).reply(500, null);
+
+      const result = await client.Capture(request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -178,10 +266,25 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.FindBoardedCard(request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
 
       expect(result.CardNumber).to.equal("0026");
       expect(result.ExpirationDate).to.equal("1218");
       expect(result.CardType).to.equal(CardType.Visa);
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const request: IVaultTokenRequest = {
+        VaultToken: "127MMEIIQVEW2WSZECPL"
+      };
+
+      stubSoap(FindBoardedCardXML).reply(500, null);
+
+      const result = await client.FindBoardedCard(request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -200,6 +303,22 @@ describe("MerchantwareCreditClient", () => {
       );
 
       const result = await client.UpdateBoardedCard(request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
+      }
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const request: IUpdateBoardedCardRequest = {
+        VaultToken: "127MMEIIQVEW2WSZECPL",
+        ExpirationDate: "0118"
+      };
+
+      stubSoap(UpdateBoardedCardXML).reply(500, null);
+
+      const result = await client.UpdateBoardedCard(request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -233,28 +352,56 @@ describe("MerchantwareCreditClient", () => {
         )
       );
 
-      try {
-        const result = await client.Sale(paymentData, request);
-
-        expect(result.ApprovalStatus).to.equal("APPROVED");
-        expect(result.Token).to.equal("608957");
-        expect(result.AuthorizationCode).to.equal("OK775C");
-        expect(result.TransactionDate).to.equal("3/14/2016 7:57:22 PM");
-        expect(result.Amount).to.equal("1.05");
-        expect(result.RemainingCardBalance).to.equal("");
-        expect(result.CardNumber).to.equal("************0026");
-        expect(result.Cardholder).to.equal("John Doe");
-        expect(result.CardType).to.equal("4");
-        expect(result.FsaCard).to.equal("");
-        expect(result.ReaderEntryMode).to.equal("1");
-        expect(result.AvsResponse).to.equal("Y");
-        expect(result.CvResponse).to.be.equal("");
-        expect(result.ErrorMessage).to.equal("");
-        expect(result.ExtraData).to.equal("");
-        expect(result.Rfmiq).to.equal("10000ABCDE");
-      } catch (e) {
-        console.log(e);
+      const result = await client.Sale(paymentData, request);
+      if (result instanceof Error) {
+        assert(false, "Result is an error");
+        return;
       }
+
+      expect(result.ApprovalStatus).to.equal("APPROVED");
+      expect(result.Token).to.equal("608957");
+      expect(result.AuthorizationCode).to.equal("OK775C");
+      expect(result.TransactionDate).to.equal("3/14/2016 7:57:22 PM");
+      expect(result.Amount).to.equal("1.05");
+      expect(result.RemainingCardBalance).to.equal("");
+      expect(result.CardNumber).to.equal("************0026");
+      expect(result.Cardholder).to.equal("John Doe");
+      expect(result.CardType).to.equal("4");
+      expect(result.FsaCard).to.equal("");
+      expect(result.ReaderEntryMode).to.equal("1");
+      expect(result.AvsResponse).to.equal("Y");
+      expect(result.CvResponse).to.be.equal("");
+      expect(result.ErrorMessage).to.equal("");
+      expect(result.ExtraData).to.equal("");
+      expect(result.Rfmiq).to.equal("10000ABCDE");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const request: ISaleRequest = {
+        Amount: 1.05,
+        CashbackAmount: 0.0,
+        SurchargeAmount: 0.0,
+        TaxAmount: 0.0,
+        InvoiceNumber: "1556",
+        PurchaseOrderNumber: "17801",
+        CustomerCode: "20",
+        RegisterNumber: "35",
+        MerchantTransactionId: "166901",
+        CardAcceptorTerminalId: "3",
+        EnablePartialAuthorization: false,
+        ForceDuplicate: false
+      };
+
+      const paymentData: IPaymentData = {
+        Source: "KEYED",
+        CardNumber: "4012000033330026",
+        ExpirationDate: "1219"
+      };
+
+      stubSoap(SaleXML).reply(500, null);
+
+      const result = await client.Sale(paymentData, request);
+      expect(result instanceof Error).to.be.true;
     });
   });
 });

@@ -5,13 +5,14 @@ export default class MerchantwareCreditClient {
     soapClient: any;
     constructor(config: IMerchantCredentials);
     static createInstance(config: IMerchantCredentials): Promise<MerchantwareCreditClient>;
+    private processResult;
     private withCredentials;
-    AdjustTip(Request: ITipRequest): Promise<ITransactionResponse45>;
-    AttachSignature(request: ISignatureRequest): Promise<ISignatureResponse45>;
-    Authorize(PaymentData: IPaymentData, Request: IAuthorizationRequest): Promise<ITransactionResponse45>;
-    BoardCard(PaymentData: IPaymentData): Promise<IVaultBoardingResponse45>;
-    Capture(Request: ICaptureRequest): Promise<ITransactionResponse45>;
-    FindBoardedCard(Request: IVaultTokenRequest): Promise<IVaultTokenResponse45>;
-    UpdateBoardedCard(Request: IUpdateBoardedCardRequest): Promise<IVaultBoardingResponse45>;
-    Sale(PaymentData: IPaymentData, Request: ISaleRequest): Promise<ITransactionResponse45>;
+    AdjustTip(Request: ITipRequest): Promise<ITransactionResponse45 | Error>;
+    AttachSignature(request: ISignatureRequest): Promise<ISignatureResponse45 | Error>;
+    Authorize(PaymentData: IPaymentData, Request: IAuthorizationRequest): Promise<ITransactionResponse45 | Error>;
+    BoardCard(PaymentData: IPaymentData): Promise<IVaultBoardingResponse45 | Error>;
+    Capture(Request: ICaptureRequest): Promise<ITransactionResponse45 | Error>;
+    FindBoardedCard(Request: IVaultTokenRequest): Promise<IVaultTokenResponse45 | Error>;
+    UpdateBoardedCard(Request: IUpdateBoardedCardRequest): Promise<IVaultBoardingResponse45 | Error>;
+    Sale(PaymentData: IPaymentData, Request: ISaleRequest): Promise<ITransactionResponse45 | Error>;
 }

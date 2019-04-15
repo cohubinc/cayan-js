@@ -84,7 +84,6 @@ export default class GeniusClient {
     const params = { TransportKey, Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    console.log(url);
     return await fetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -97,7 +96,6 @@ export default class GeniusClient {
     const params = { Action: "Status", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    console.log(url);
     return await fetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -113,7 +111,6 @@ export default class GeniusClient {
     const params = { Action: "InitiateKeyedEntry", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -125,7 +122,6 @@ export default class GeniusClient {
     const params = { Action: "StartOrder", Format: "JSON", Order };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -146,7 +142,6 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -157,7 +152,6 @@ export default class GeniusClient {
     const params = { Action: "Cancel", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -169,7 +163,6 @@ export default class GeniusClient {
     const params = { Action: "AddItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -183,7 +176,6 @@ export default class GeniusClient {
     const params = { Action: "DiscountItem", Format: "JSON", ...discountItem };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -197,7 +189,6 @@ export default class GeniusClient {
     const params = { Action: "DeleteItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -215,7 +206,6 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -229,7 +219,6 @@ export default class GeniusClient {
     const params = { Action: "UpdateItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
@@ -239,7 +228,6 @@ export default class GeniusClient {
     const params = { Action: "UpdateTotal", Format: "JSON", ...updateParams };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
     return await fetch(url).then(r => r.json().catch(e => e));
   }
 
