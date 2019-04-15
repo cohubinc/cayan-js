@@ -275,10 +275,12 @@ export default class Client {
       headers,
       method: "POST",
       body: xml
-    }).then(async response => {
-      const body = await response.text();
-      return parseSync(body, response);
-    });
+    })
+      .then(async response => {
+        const body = await response.text();
+        return parseSync(body, response);
+      })
+      .catch(() => new Error("Error communicating with Cayan"));
 
     function parseSync(body: any, response: any) {
       var obj;

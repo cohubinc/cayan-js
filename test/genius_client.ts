@@ -4,13 +4,11 @@ import nock from "nock";
 import fs from "fs";
 import {
   ITransportRequest,
-  IStageTransactionResult,
-  IInitiateTransactionResult,
-  ICheckStatusResponse,
   CEDScreen,
   ExternalPaymentTypes,
   CEDBoolean
 } from "../lib/Genius/definitions";
+import { fail } from "assert";
 
 describe("GeniusClient", () => {
   const config = {
@@ -19,7 +17,7 @@ describe("GeniusClient", () => {
     MerchantKey: "00000-00000-00000-00000-00000",
     CEDHostname: "10.0.0.76"
   };
-  let client;
+  let client: GeniusClient;
   // const genius = new GeniusClient(config);
   const CEDUrl = `http://${config.CEDHostname}:8080`;
 
@@ -61,12 +59,39 @@ describe("GeniusClient", () => {
           )
         );
 
-      const result: IStageTransactionResult = await client.StageTransaction(
-        transaction
-      );
+      const result = await client.StageTransaction(transaction);
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.TransportKey).to.equal(
         "d4e59cb1-e5d9-49bf-a6b9-b8284a8709c3"
       );
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const transaction: ITransportRequest = {
+        TransactionType: "SALE",
+        ClerkId: "1",
+        Dba: "ZERO INC",
+        SoftwareName: "POS Software",
+        SoftwareVersion: "1",
+        Amount: 1.01,
+        OrderNumber: "TEST-1",
+        TaxAmount: 0.1
+      };
+
+      nock("https://transport.merchantware.net")
+        .get("/v4/transportService.asmx?WSDL")
+        .reply(200, fs.readFileSync(__dirname + "/fixtures/xml/WSDL.xml"));
+
+      nock("https://transport.merchantware.net")
+        .post("/v4/transportService.asmx")
+        .reply(500, "Error");
+
+      const result = await client.StageTransaction(transaction);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -84,12 +109,27 @@ describe("GeniusClient", () => {
           fs.readFileSync(__dirname + "/fixtures/json/InitiateTransaction.json")
         );
 
-      const result: IInitiateTransactionResult = await client.InitiateTransaction(
-        TransportKey
-      );
+      const result = await client.InitiateTransaction(TransportKey);
+
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
 
       expect(result.Status).to.equal("APPROVED");
       expect(result.AmountApproved).to.equal("1.00");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const TransportKey = "abc-123";
+
+      nock(CEDUrl)
+        .get("/v2/pos")
+        .query({ TransportKey, Format: "JSON" })
+        .reply(500, null);
+
+      const result = await client.InitiateTransaction(TransportKey);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -103,7 +143,13 @@ describe("GeniusClient", () => {
           fs.readFileSync(__dirname + "/fixtures/json/CheckStatus.json")
         );
 
-      const result: ICheckStatusResponse = await client.CheckStatus();
+      const result = await client.CheckStatus();
+
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Online");
       expect(result.CurrentScreen).to.equal(CEDScreen["Idle screen"]);
       expect(result.ResponseMessage).to.equal("");
@@ -111,6 +157,16 @@ describe("GeniusClient", () => {
       expect(result.ApplicationVersion).to.equal("H1.0.1.68");
       expect(result.AdditionalParameters.PaymentDataCaptured).to.equal(false);
       expect(result.AdditionalParameters.RemoveEMVCard).to.equal(false);
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v2/pos")
+        .query({ Action: "Status", Format: "JSON" })
+        .reply(500, null);
+
+      const result = await client.CheckStatus();
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -124,7 +180,23 @@ describe("GeniusClient", () => {
           fs.readFileSync(__dirname + "/fixtures/json/StartOrder.json")
         );
       const result = await client.StartOrder("1000");
+
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({ Action: "StartOrder", Order: "1000", Format: "JSON" })
+        .reply(500, null);
+
+      const result = await client.StartOrder("1000");
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -144,7 +216,27 @@ describe("GeniusClient", () => {
         );
 
       const result = await client.EndOrder("1000", ExternalPaymentTypes.Cash);
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "EndOrder",
+          Order: "1000",
+          Format: "JSON",
+          ExternalPaymentType: "Cash"
+        })
+        .reply(500, null);
+
+      const result = await client.EndOrder("1000", ExternalPaymentTypes.Cash);
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -159,7 +251,25 @@ describe("GeniusClient", () => {
         .reply(200, fs.readFileSync(__dirname + "/fixtures/json/Cancel.json"));
 
       const result = await client.Cancel();
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Cancelled");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "Cancel",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.Cancel();
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -198,8 +308,50 @@ describe("GeniusClient", () => {
         Category: "None"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
       expect(result.ItemID).to.equal("1");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "AddItem",
+          Order: "1000",
+          Type: "Sku",
+          TypeValue: "xxx",
+          UPC: "UPC123",
+          Quantity: "1",
+          Description: "Pad Prik Pow",
+          Amount: "12.25",
+          TaxAmount: "0",
+          OrderTotal: "12.25",
+          OrderTax: "0",
+          Category: "None",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.AddItem({
+        Order: "1000",
+        Type: "Sku",
+        TypeValue: "xxx",
+        UPC: "UPC123",
+        Quantity: "1",
+        Description: "Pad Prik Pow",
+        Amount: "12.25",
+        TaxAmount: "0",
+        OrderTotal: "12.25",
+        OrderTax: "0",
+        Category: "None"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -243,8 +395,52 @@ describe("GeniusClient", () => {
         Category: "None"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
       expect(result.ItemID).to.equal("3");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "DiscountItem",
+          TargetItemID: "1",
+          Order: "1000",
+          Type: "Sku",
+          TypeValue: "xxx",
+          UPC: "UPC123",
+          Quantity: "1",
+          Description: "Pad Prik Pow",
+          Amount: "12.25",
+          TaxAmount: "0",
+          OrderTotal: "12.25",
+          OrderTax: "0",
+          Category: "None",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.DiscountItem({
+        Order: "1000",
+        TargetItemID: "1",
+        Type: "Sku",
+        TypeValue: "xxx",
+        UPC: "UPC123",
+        Quantity: "1",
+        Description: "Pad Prik Pow",
+        Amount: "12.25",
+        TaxAmount: "0",
+        OrderTotal: "12.25",
+        OrderTax: "0",
+        Category: "None"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -272,7 +468,35 @@ describe("GeniusClient", () => {
         OrderTax: "0"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Order: "1000",
+          TargetItemID: "1",
+          OrderTotal: "0",
+          OrderTax: "0",
+          Action: "DeleteItem",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.DeleteItem({
+        Order: "1000",
+        TargetItemID: "1",
+        OrderTotal: "0",
+        OrderTax: "0"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -300,7 +524,35 @@ describe("GeniusClient", () => {
         OrderTax: "0"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Order: "1000",
+          Action: "DeleteAllItems",
+          OrderTotal: "0",
+          OrderTax: "0",
+          Format: "JSON",
+          RetainPaymentData: "false"
+        })
+        .reply(500, null);
+
+      const result = await client.DeleteAllItems({
+        Order: "1000",
+        RetainPaymentData: CEDBoolean.False,
+        OrderTotal: "0",
+        OrderTax: "0"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -344,7 +596,51 @@ describe("GeniusClient", () => {
         Category: "None"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "UpdateItem",
+          TargetItemID: "1",
+          Order: "1000",
+          Type: "Sku",
+          TypeValue: "xxx",
+          UPC: "UPC123",
+          Quantity: "2",
+          Description: "Pad Prik Pow",
+          Amount: "12.25",
+          TaxAmount: "0",
+          OrderTotal: "24.50",
+          OrderTax: "0",
+          Category: "None",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.UpdateItem({
+        Order: "1000",
+        TargetItemID: "1",
+        Type: "Sku",
+        TypeValue: "xxx",
+        UPC: "UPC123",
+        Quantity: "2",
+        Description: "Pad Prik Pow",
+        Amount: "12.25",
+        TaxAmount: "0",
+        OrderTotal: "24.50",
+        OrderTax: "0",
+        Category: "None"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 
@@ -370,7 +666,33 @@ describe("GeniusClient", () => {
         OrderTax: "0"
       });
 
+      if (result instanceof Error) {
+        fail("Result is an error");
+        return;
+      }
+
       expect(result.Status).to.equal("Success");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      nock(CEDUrl)
+        .get("/v1/pos")
+        .query({
+          Action: "UpdateTotal",
+          Order: "1000",
+          OrderTotal: "20.25",
+          OrderTax: "0",
+          Format: "JSON"
+        })
+        .reply(500, null);
+
+      const result = await client.UpdateTotal({
+        Order: "1000",
+        OrderTotal: "20.25",
+        OrderTax: "0"
+      });
+
+      expect(result instanceof Error).to.be.true;
     });
   });
 });

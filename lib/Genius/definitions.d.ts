@@ -253,3 +253,8 @@ export interface IUpdateTotalResponse {
     ResponseMessage: string;
     AdditionalParameters: any;
 }
+export interface ICancelTransactionResponse {
+    Status: "Cancelled" | "TransactionApproved_NoSignatureCollected" | "Denied" | "Error";
+    ResponseMessage: string;
+    AdditionalParameters: any;
+}
