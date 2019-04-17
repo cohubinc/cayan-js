@@ -16,6 +16,7 @@ import {
 } from "./definitions";
 import CreditWSDL from "./CreditWSDL";
 import CreateSoapClientWithWSDL from "../../CreateSoapClientWithWSDL";
+import isEmpty from "lodash/isEmpty";
 
 export default class MerchantwareCreditClient {
   config: IMerchantCredentials;
@@ -38,6 +39,14 @@ export default class MerchantwareCreditClient {
     return client;
   }
 
+  private processResult(result: any, key: string, error) {
+    if (result && result[0] && !isEmpty(result[0])) {
+      return result[0][key];
+    } else {
+      return new Error(error);
+    }
+  }
+
   private withCredentials(args: any) {
     return {
       Credentials: {
@@ -49,65 +58,132 @@ export default class MerchantwareCreditClient {
     };
   }
 
-  async AdjustTip(Request: ITipRequest): Promise<ITransactionResponse45> {
+  async AdjustTip(
+    Request: ITipRequest
+  ): Promise<ITransactionResponse45 | Error> {
     const args = this.withCredentials({ Request });
-    const result = await this.soapClient.AdjustTipAsync(args);
-    return result[0].AdjustTipResult;
+    try {
+      const result = await this.soapClient.AdjustTipAsync(args);
+      return this.processResult(
+        result,
+        "AdjustTipResult",
+        "Error adjusting tip"
+      );
+    } catch (_e) {
+      return new Error("Error adjusting tip");
+    }
   }
 
   async AttachSignature(
     request: ISignatureRequest
-  ): Promise<ISignatureResponse45> {
+  ): Promise<ISignatureResponse45 | Error> {
     const args = this.withCredentials({ Request: request });
-    const result = await this.soapClient.AttachSignatureAsync(args);
-    return result[0].AttachSignatureResult;
+
+    try {
+      const result = await this.soapClient.AttachSignatureAsync(args);
+      return this.processResult(
+        result,
+        "AttachSignatureResult",
+        "Error Attaching Signature"
+      );
+    } catch (_e) {
+      return new Error("Error attaching signature");
+    }
   }
 
   async Authorize(
     PaymentData: IPaymentData,
     Request: IAuthorizationRequest
-  ): Promise<ITransactionResponse45> {
+  ): Promise<ITransactionResponse45 | Error> {
     const args = this.withCredentials({ PaymentData, Request });
-    const result = await this.soapClient.AuthorizeAsync(args);
-    return result[0].AuthorizeResult;
+
+    try {
+      const result = await this.soapClient.AuthorizeAsync(args);
+      return this.processResult(result, "AuthorizeResult", "Error authorizing");
+    } catch (_e) {
+      return new Error("Error authorizing");
+    }
   }
 
   async BoardCard(
     PaymentData: IPaymentData
-  ): Promise<IVaultBoardingResponse45> {
+  ): Promise<IVaultBoardingResponse45 | Error> {
     const args = this.withCredentials({ PaymentData });
-    const result = await this.soapClient.BoardCardAsync(args);
-    return result[0].BoardCardResult;
+
+    try {
+      const result = await this.soapClient.BoardCardAsync(args);
+      return this.processResult(
+        result,
+        "BoardCardResult",
+        "Error boarding card"
+      );
+    } catch (_e) {
+      return new Error("Error boarding card");
+    }
   }
 
-  async Capture(Request: ICaptureRequest): Promise<ITransactionResponse45> {
+  async Capture(
+    Request: ICaptureRequest
+  ): Promise<ITransactionResponse45 | Error> {
     const args = this.withCredentials({ Request });
-    const result = await this.soapClient.CaptureAsync(args);
-    return result[0].CaptureResult;
+
+    try {
+      const result = await this.soapClient.CaptureAsync(args);
+      return this.processResult(
+        result,
+        "CaptureResult",
+        "Error capturing card"
+      );
+    } catch (_e) {
+      return new Error("Error capturing card");
+    }
   }
 
   async FindBoardedCard(
     Request: IVaultTokenRequest
-  ): Promise<IVaultTokenResponse45> {
+  ): Promise<IVaultTokenResponse45 | Error> {
     const args = this.withCredentials({ Request });
-    const result = await this.soapClient.FindBoardedCardAsync(args);
-    return result[0].FindBoardedCardResult;
+
+    try {
+      const result = await this.soapClient.FindBoardedCardAsync(args);
+      return this.processResult(
+        result,
+        "FindBoardedCardResult",
+        "Error finding boarded card"
+      );
+    } catch (_e) {
+      return new Error("Error finding boarded card");
+    }
   }
 
   async UpdateBoardedCard(
     Request: IUpdateBoardedCardRequest
-  ): Promise<IVaultBoardingResponse45> {
+  ): Promise<IVaultBoardingResponse45 | Error> {
     const args = this.withCredentials({ Request });
-    const result = await this.soapClient.UpdateBoardedCardAsync(args);
-    return result[0].UpdateBoardedCardResult;
+
+    try {
+      const result = await this.soapClient.UpdateBoardedCardAsync(args);
+      return this.processResult(
+        result,
+        "UpdateBoardedCardResult",
+        "Error updating boarded card"
+      );
+    } catch (_e) {
+      return new Error("Error updating boarded card");
+    }
   }
 
   async Sale(
     PaymentData: IPaymentData,
     Request: ISaleRequest
-  ): Promise<ITransactionResponse45> {
+  ): Promise<ITransactionResponse45 | Error> {
     const args = this.withCredentials({ PaymentData, Request });
-    const result = await this.soapClient.SaleAsync(args);
-    return result[0].SaleResult;
+
+    try {
+      const result = await this.soapClient.SaleAsync(args);
+      return this.processResult(result, "SaleResult", "Error processing sale");
+    } catch (_e) {
+      return new Error("Error processing sale");
+    }
   }
 }

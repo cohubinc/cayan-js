@@ -18,7 +18,8 @@ import {
   IDeleteAllItemsResponse,
   IUpdateItemResponse,
   IUpdateTotalResponse,
-  IInitiateTransactionResult
+  IInitiateTransactionResult,
+  ICancelTransactionResponse
 } from "./definitions";
 import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
@@ -55,38 +56,49 @@ export default class GeniusClient {
 
   async StageTransaction(
     transportRequest: ITransportRequest
-  ): Promise<IStageTransactionResult> {
+  ): Promise<IStageTransactionResult | Error> {
     const args = {
       merchantName: this.config.MerchantName,
       merchantSiteId: this.config.MerchantSiteId,
       merchantKey: this.config.MerchantKey,
       request: { ...transportRequest }
     };
-    const result = await this.soapClient.CreateTransactionAsync(args);
-    return result[0].CreateTransactionResult;
+
+    try {
+      const result = await this.soapClient.CreateTransactionAsync(args);
+      return result[0].CreateTransactionResult;
+    } catch (e) {
+      return new Promise(resolve =>
+        resolve(new Error("Error staging transaction"))
+      );
+    }
   }
 
   /**
    * Check the status of the CED
    * @param TransportKey - The transport key from the StageTransaction response
    */
-  async InitiateTransaction(TransportKey: string): Promise<any> {
+  async InitiateTransaction(
+    TransportKey: string
+  ): Promise<IInitiateTransactionResult | Error> {
     const params = { TransportKey, Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    console.log(url);
-    return (await fetch(url).then(r => r.json())) as IInitiateTransactionResult;
+    return await fetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
    * Check the status of the CED
    */
-  async CheckStatus(): Promise<ICheckStatusResponse> {
+  async CheckStatus(): Promise<ICheckStatusResponse | Error> {
     const params = { Action: "Status", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    console.log(url);
-    return (await fetch(url).then(r => r.json())) as ICheckStatusResponse;
+    return await fetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -95,24 +107,22 @@ export default class GeniusClient {
    */
   async InitiateKeyedEntry(
     PaymentType: string = null
-  ): Promise<IStartOrderResponse> {
+  ): Promise<IStartOrderResponse | Error> {
     const params = { Action: "InitiateKeyedEntry", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
    * Start an order
    * @param Order - The order or invoice number associated with the transaction.
    */
-  async StartOrder(Order: string): Promise<IStartOrderResponse> {
+  async StartOrder(Order: string): Promise<IStartOrderResponse | Error> {
     const params = { Action: "StartOrder", Format: "JSON", Order };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
@@ -123,7 +133,7 @@ export default class GeniusClient {
   async EndOrder(
     order: string,
     externalPaymentType: ExternalPaymentTypes
-  ): Promise<IEndOrderResponse> {
+  ): Promise<IEndOrderResponse | Error> {
     const params = {
       Action: "EndOrder",
       Format: "JSON",
@@ -132,31 +142,28 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
    * Cancels the current order and resets the screen back to an idle state
    */
-  async Cancel(): Promise<any> {
+  async Cancel(): Promise<ICancelTransactionResponse | Error> {
     const params = { Action: "Cancel", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
    * Add an item to the screen. Also allows updating order totals.
    * @param item - The item to be added to the order. See IAddItemParameters
    */
-  async AddItem(item: IAddItemParameters): Promise<IAddItemResponse> {
+  async AddItem(item: IAddItemParameters): Promise<IAddItemResponse | Error> {
     const params = { Action: "AddItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
@@ -165,24 +172,24 @@ export default class GeniusClient {
    */
   async DiscountItem(
     discountItem: IDiscountItemParameters
-  ): Promise<IDiscountItemResponse> {
+  ): Promise<IDiscountItemResponse | Error> {
     const params = { Action: "DiscountItem", Format: "JSON", ...discountItem };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
    * Delete a line item
    * @param item - Item to be deleted from the list
    */
-  async DeleteItem(item: IDeleteItemParameters): Promise<IDeleteItemResponse> {
+  async DeleteItem(
+    item: IDeleteItemParameters
+  ): Promise<IDeleteItemResponse | Error> {
     const params = { Action: "DeleteItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
@@ -191,7 +198,7 @@ export default class GeniusClient {
    */
   async DeleteAllItems(
     deleteParams: IDeleteAllItemsParameters
-  ): Promise<IDeleteAllItemsResponse> {
+  ): Promise<IDeleteAllItemsResponse | Error> {
     const params = {
       Action: "DeleteAllItems",
       Format: "JSON",
@@ -199,30 +206,29 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
    * Update a line item
    * @param item - the item to be updated
    */
-  async UpdateItem(item: IUpdateItemParameters): Promise<IUpdateItemResponse> {
+  async UpdateItem(
+    item: IUpdateItemParameters
+  ): Promise<IUpdateItemResponse | Error> {
     const params = { Action: "UpdateItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   async UpdateTotal(
     updateParams: IUpdateTotalParams
-  ): Promise<IUpdateTotalResponse> {
+  ): Promise<IUpdateTotalResponse | Error> {
     const params = { Action: "UpdateTotal", Format: "JSON", ...updateParams };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    console.log(url);
-    return await fetch(url).then(r => r.json());
+    return await fetch(url).then(r => r.json().catch(e => e));
   }
 
   /**
