@@ -3,7 +3,6 @@ import nock from "nock";
 import fs from "fs";
 import { MerchantwareCreditClient } from "../lib";
 import {
-  ITransactionResponse45,
   IPaymentData,
   IAuthorizationRequest,
   ITipRequest,
@@ -12,7 +11,8 @@ import {
   IVaultTokenRequest,
   CardType,
   IUpdateBoardedCardRequest,
-  ISaleRequest
+  ISaleRequest,
+  IVoidRequest
 } from "../lib/Merchantware/Credit/definitions";
 
 describe("MerchantwareCreditClient", () => {
@@ -404,6 +404,52 @@ describe("MerchantwareCreditClient", () => {
       expect(result instanceof Error).to.be.true;
     });
   });
+
+  describe("Void", () => {
+    it("Void a sale", async () => {
+      const request: IVoidRequest = { Token: "608974" };
+
+      stubSoap(VoidXML).reply(
+        201,
+        fs.readFileSync(
+          __dirname + "/fixtures/xml/Merchantware/Credit/Void.xml"
+        )
+      );
+
+      const result = await client.Void(request);
+      if (result instanceof Error) {
+        assert(false, result.message);
+        return;
+      }
+
+      // DECLINED;1019;original transaction id not found
+
+      expect(result.ApprovalStatus).to.equal("APPROVED");
+      expect(result.Token).to.equal("608974");
+      expect(result.AuthorizationCode).to.equal("VOID");
+      expect(result.TransactionDate).to.equal("5/8/2019 4:16:51 PM");
+      expect(result.Amount).to.equal("");
+      expect(result.RemainingCardBalance).to.equal("");
+      expect(result.CardNumber).to.equal("");
+      expect(result.Cardholder).to.equal("");
+      expect(result.CardType).to.equal("0");
+      expect(result.FsaCard).to.equal("");
+      expect(result.ReaderEntryMode).to.equal("0");
+      expect(result.AvsResponse).to.equal("");
+      expect(result.CvResponse).to.be.equal("");
+      expect(result.ErrorMessage).to.equal("");
+      expect(result.ExtraData).to.equal("");
+    });
+
+    it("returns an error for failed fetch", async () => {
+      const request: IVoidRequest = { Token: "608974" };
+
+      stubSoap(VoidXML).reply(500, null);
+
+      const result = await client.Void(request);
+      expect(result instanceof Error).to.be.true;
+    });
+  });
 });
 
 const AdjustTipXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><AdjustTip xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><Amount>1.00</Amount><Token>1236559</Token></Request></AdjustTip></soap:Body></soap:Envelope>`;
@@ -414,3 +460,4 @@ const CaptureXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:s
 const FindBoardedCardXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><FindBoardedCard xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><VaultToken>127MMEIIQVEW2WSZECPL</VaultToken></Request></FindBoardedCard></soap:Body></soap:Envelope>`;
 const UpdateBoardedCardXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><UpdateBoardedCard xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><VaultToken>127MMEIIQVEW2WSZECPL</VaultToken><ExpirationDate>0118</ExpirationDate></Request></UpdateBoardedCard></soap:Body></soap:Envelope>`;
 const SaleXML = `<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" xmlns:tns=\"http://schemas.merchantwarehouse.com/merchantware/v45/\"><soap:Body><Sale xmlns=\"http://schemas.merchantwarehouse.com/merchantware/v45/\"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><PaymentData><Source>KEYED</Source><CardNumber>4012000033330026</CardNumber><ExpirationDate>1219</ExpirationDate></PaymentData><Request><Amount>1.05</Amount><CashbackAmount>0</CashbackAmount><SurchargeAmount>0</SurchargeAmount><TaxAmount>0</TaxAmount><InvoiceNumber>1556</InvoiceNumber><PurchaseOrderNumber>17801</PurchaseOrderNumber><CustomerCode>20</CustomerCode><RegisterNumber>35</RegisterNumber><MerchantTransactionId>166901</MerchantTransactionId><CardAcceptorTerminalId>3</CardAcceptorTerminalId><EnablePartialAuthorization>false</EnablePartialAuthorization><ForceDuplicate>false</ForceDuplicate></Request></Sale></soap:Body></soap:Envelope>`;
+const VoidXML = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://schemas.merchantwarehouse.com/merchantware/v45/"><soap:Body><Void xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/"><Credentials><MerchantName>ZERO INC</MerchantName><MerchantSiteId>00000000</MerchantSiteId><MerchantKey>00000-00000-00000-00000-00000</MerchantKey></Credentials><Request><Token>608974</Token></Request></Void></soap:Body></soap:Envelope>`;

@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <soap:Body>
+<?xml version="1.0" encoding="utf-8" ?>
+<soap12:Envelope xmlns:soap12="http://schemas.xmlsoap12.org/soap12/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap12:Body>
     <CreateTransactionResponse xmlns="http://transport.merchantware.net/v4/">
       <CreateTransactionResult>
         <TransportKey>d4e59cb1-e5d9-49bf-a6b9-b8284a8709c3</TransportKey>
@@ -9,5 +8,5 @@
         <Messages />
       </CreateTransactionResult>
     </CreateTransactionResponse>
-  </soap:Body>
-</soap:Envelope>
+  </soap12:Body>
+</soap12:Envelope>

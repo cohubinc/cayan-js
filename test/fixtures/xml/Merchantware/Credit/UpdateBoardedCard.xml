@@ -3,8 +3,8 @@
       <UpdateBoardedCardResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
          <UpdateBoardedCardResult>
             <VaultToken>127MMEIIQVEW2WSZECPL</VaultToken>
-            <ErrorCode/>
-            <ErrorMessage/>
+            <ErrorCode />
+            <ErrorMessage />
          </UpdateBoardedCardResult>
       </UpdateBoardedCardResponse>
    </soap:Body>

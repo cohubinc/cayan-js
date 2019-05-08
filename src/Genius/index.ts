@@ -19,7 +19,8 @@ import {
   IUpdateItemResponse,
   IUpdateTotalResponse,
   IInitiateTransactionResult,
-  ICancelTransactionResponse
+  ICancelTransactionResponse,
+  IDetailsByTransportKeyResponse
 } from "./definitions";
 import "fetch-everywhere";
 import GeniusWSDL from "./GeniusWSDL";
@@ -242,7 +243,8 @@ export default class GeniusClient {
       TransportKey
     };
     const result = await this.reportClient.DetailsByTransportKeyAsync(args);
-    return result[0].DetailsByTransportKeyResult;
+    return result[0]
+      .DetailsByTransportKeyResult as IDetailsByTransportKeyResponse;
   }
 }
 

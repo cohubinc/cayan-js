@@ -1,4 +1,4 @@
-import { IGeniusConfig, ExternalPaymentTypes, IAddItemParameters, IDiscountItemParameters, IDeleteItemParameters, IDeleteAllItemsParameters, IUpdateItemParameters, IUpdateTotalParams, ITransportRequest, ICheckStatusResponse, IStageTransactionResult, IStartOrderResponse, IEndOrderResponse, IAddItemResponse, IDiscountItemResponse, IDeleteItemResponse, IDeleteAllItemsResponse, IUpdateItemResponse, IUpdateTotalResponse, IInitiateTransactionResult, ICancelTransactionResponse } from "./definitions";
+import { IGeniusConfig, ExternalPaymentTypes, IAddItemParameters, IDiscountItemParameters, IDeleteItemParameters, IDeleteAllItemsParameters, IUpdateItemParameters, IUpdateTotalParams, ITransportRequest, ICheckStatusResponse, IStageTransactionResult, IStartOrderResponse, IEndOrderResponse, IAddItemResponse, IDiscountItemResponse, IDeleteItemResponse, IDeleteAllItemsResponse, IUpdateItemResponse, IUpdateTotalResponse, IInitiateTransactionResult, ICancelTransactionResponse, IDetailsByTransportKeyResponse } from "./definitions";
 import "fetch-everywhere";
 export default class GeniusClient {
     config: IGeniusConfig;
@@ -65,5 +65,5 @@ export default class GeniusClient {
     /**
      * DetailsByTransportKey
      */
-    DetailsByTransportKey(TransportKey: string): Promise<any>;
+    DetailsByTransportKey(TransportKey: string): Promise<IDetailsByTransportKeyResponse>;
 }

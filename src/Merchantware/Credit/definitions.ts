@@ -156,6 +156,13 @@ export interface ISaleRequest {
   Invoice?: IInvoice; //Object 	- 	An optional field that you use to specify various data the merchant needs to include for level three processing-rates.
 }
 
+export interface IVoidRequest {
+  Token?: string; // 0-100 The token identifier returned from a previous transaction. Note: Either Token or MerchantTransactionId is required.
+  RegisterNumber?: string; // 0-100 The identifier for the register or point of sale device submitting the transaction.
+  MerchantTransactionId?: string; // 0-100 The merchant-defined identifier for the transaction. Note: Either Token or MerchantTransactionId is required.
+  CardAcceptorTerminalId?: number; // (Numeric) 0-16 The Mastercard Card Acceptor Terminal Identifierused to uniquely identify the terminal to the processor.
+}
+
 export interface IInvoice {
   TaxIndicator: TaxIndicator; // 	- 	- 	An indicator that specifies whether the transaction's primary amount includes or omits tax. Values are: NotProvided Provided Exempt
   ProductDescription: string; // 	String 	0-100 	Describes the item being purchased by the consumer.

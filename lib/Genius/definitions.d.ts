@@ -258,3 +258,49 @@ export interface ICancelTransactionResponse {
     ResponseMessage: string;
     AdditionalParameters: any;
 }
+export interface IDetailsByTransportKeyResponse {
+    Status: string;
+    ErrorMessage: string;
+    TotalAmountApproved: string;
+    RequestedAmount: string;
+    ResponseType: string;
+    PaymentDetails: any[];
+    Invoice: IInvoice;
+    AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+export interface IInvoice {
+    TaxIndicator: "NotProvided" | "Provided" | "Exempt";
+    ProductDescription: string;
+    DiscountAmount: number;
+    ShippingAmount: number;
+    DutyAmount: number;
+    DestinationPostalCode: string;
+    DestinationCountryCode: string;
+    ShipFromPostalCode: string;
+    LineItems: ILineItem[];
+}
+export interface ILineItem {
+    CommodityCode: string;
+    Description: string;
+    Upc: string;
+    Quantity: number;
+    UnitOfMeasure: string;
+    UnitCost: number;
+    DiscountAmount: number;
+    TotalAmount: number;
+    TaxAmount: number;
+    ExtendedAmount: number;
+    DebitOrCreditIndicator: "Credit" | "Debit";
+    NetOrGrossIndicator: "Net" | "Gross";
+}
+export interface IAdditionalResponseParameters {
+    FsaCard: boolean;
+    EbtDetails: {
+        EbtType: "CASH" | "SNAP";
+        FnsId?: string;
+        Balances: {
+            CashAvailableBalance: number;
+            SnapAvailableBalance: number;
+        };
+    };
+}

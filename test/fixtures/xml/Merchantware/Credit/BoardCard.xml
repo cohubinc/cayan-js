@@ -3,8 +3,8 @@
       <BoardCardResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
          <BoardCardResult>
             <VaultToken>1000000000002WSZECPL</VaultToken>
-            <ErrorCode/>
-            <ErrorMessage/>
+            <ErrorCode />
+            <ErrorMessage />
             <Rfmiq>10000ABCDE</Rfmiq>
          </BoardCardResult>
       </BoardCardResponse>
