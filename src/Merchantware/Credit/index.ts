@@ -189,8 +189,7 @@ export default class MerchantwareCreditClient {
         "Error processing void"
       ) as ITransactionResponse45;
     } catch (e) {
-      return e;
-      // return new Error("Error processing void");
+      return new Error("Error processing void");
     }
   }
 }
