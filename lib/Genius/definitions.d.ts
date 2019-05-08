@@ -264,9 +264,54 @@ export interface IDetailsByTransportKeyResponse {
     TotalAmountApproved: string;
     RequestedAmount: string;
     ResponseType: string;
-    PaymentDetails: any[];
+    PaymentDetails: {
+        PaymentDetail: IPaymentDetail;
+    } | IPaymentDetail[];
     Invoice: IInvoice;
     AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+export interface IPaymentDetail {
+    PaymentType: "UNKNOWN" | "AMEX" | "DISCOVER" | "MASTERCARD" | "VISA" | "DEBIT" | "EBT" | "EGC" | "WEX" | "VOYAGER" | "JCB" | "CUP" | "LU";
+    Status: "UNKNOWN" | "APPROVED" | "FAILED" | "DECLINED" | "DECLINED_DUPLICATE" | "REFERRAL";
+    ErrorMessage: string;
+    TransactionType: "UNKNOWN" | "SALE" | "REFUND" | "AUTHORIZATION";
+    Token: string;
+    AuthorizationCode: string;
+    Customer: string;
+    Email: string;
+    PhoneNumber: string;
+    AccountNumber: string;
+    ExpirationDate: string;
+    EntryMode: "UNKNOWN" | "MANUAL" | "SWIPE" | "AUTHORIZATION" | "PROXIMITY" | "BARCODE";
+    TransactionDate: string;
+    AmountDetail: IAmountDetail;
+    SignatureDetail: ISignatureDetail;
+    GiftDetail: IGiftCardDetail;
+    LoyaltyDetail: ILoyaltyDetail;
+    AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+export interface IAmountDetail {
+    AmountApproved: number;
+    AmountCharged: number;
+    TaxAmount: number;
+    TipAmount: number;
+    UserTipAmount: number;
+    DiscountAmount: number;
+    VoucherAmount: number;
+    RemainingCardBalance: number;
+}
+export interface ISignatureDetail {
+    SignatureType: string;
+    Signature: string;
+}
+export interface IGiftCardDetail {
+    Balance: number;
+}
+export interface ILoyaltyDetail {
+    Visits: number;
+    LastVisit: string;
+    LifetimeSpend: number;
+    Balance: number;
 }
 export interface IInvoice {
     TaxIndicator: "NotProvided" | "Provided" | "Exempt";

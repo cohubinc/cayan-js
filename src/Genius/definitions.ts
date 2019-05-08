@@ -306,9 +306,82 @@ export interface IDetailsByTransportKeyResponse {
   TotalAmountApproved: string; // The amount of the transaction that was approved. If partial authorizations are enabled, this will be the authorized amount and may be different than the requested amount.
   RequestedAmount: string; // The requested amount of the transaction.
   ResponseType: string; // SINGLE, MULTI or COMPOUND. Typical credit, debit and EBT payment types will return SINGLE as the ResponseType. MULTI or COMPOUND response types are returned for additional payment types such as gift and loyalty.
-  PaymentDetails: any[]; // Collection of detail objects for the transaction processed. If more than one payment type was processed to complete the transaction, each sub-transaction will be in the collection. For example, if a $100 transaction is processed using a $30 gift card and $70 credit card transaction, there will be a payment detail for each one within the payment details object.
+  PaymentDetails: { PaymentDetail: IPaymentDetail } | IPaymentDetail[]; // Collection of detail objects for the transaction processed. If more than one payment type was processed to complete the transaction, each sub-transaction will be in the collection. For example, if a $100 transaction is processed using a $30 gift card and $70 credit card transaction, there will be a payment detail for each one within the payment details object.
   Invoice: IInvoice; // An optional field that specifies various data for level three processing-rates.
   AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+
+export interface IPaymentDetail {
+  PaymentType:
+    | "UNKNOWN"
+    | "AMEX"
+    | "DISCOVER"
+    | "MASTERCARD"
+    | "VISA"
+    | "DEBIT"
+    | "EBT"
+    | "EGC"
+    | "WEX"
+    | "VOYAGER"
+    | "JCB"
+    | "CUP"
+    | "LU";
+  Status:
+    | "UNKNOWN"
+    | "APPROVED"
+    | "FAILED"
+    | "DECLINED"
+    | "DECLINED_DUPLICATE"
+    | "REFERRAL";
+  ErrorMessage: string;
+  TransactionType: "UNKNOWN" | "SALE" | "REFUND" | "AUTHORIZATION";
+  Token: string;
+  AuthorizationCode: string;
+  Customer: string;
+  Email: string;
+  PhoneNumber: string;
+  AccountNumber: string;
+  ExpirationDate: string;
+  EntryMode:
+    | "UNKNOWN"
+    | "MANUAL"
+    | "SWIPE"
+    | "AUTHORIZATION"
+    | "PROXIMITY"
+    | "BARCODE";
+  TransactionDate: string;
+  AmountDetail: IAmountDetail;
+  SignatureDetail: ISignatureDetail;
+  GiftDetail: IGiftCardDetail;
+  LoyaltyDetail: ILoyaltyDetail;
+  AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+
+export interface IAmountDetail {
+  AmountApproved: number;
+  AmountCharged: number;
+  TaxAmount: number;
+  TipAmount: number;
+  UserTipAmount: number;
+  DiscountAmount: number;
+  VoucherAmount: number;
+  RemainingCardBalance: number;
+}
+
+export interface ISignatureDetail {
+  SignatureType: string;
+  Signature: string;
+}
+
+export interface IGiftCardDetail {
+  Balance: number;
+}
+
+export interface ILoyaltyDetail {
+  Visits: number;
+  LastVisit: string;
+  LifetimeSpend: number;
+  Balance: number;
 }
 
 export interface IInvoice {
