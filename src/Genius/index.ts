@@ -22,6 +22,7 @@ import {
   ICancelTransactionResponse
 } from "./definitions";
 import "fetch-everywhere";
+import Bluebird from "bluebird";
 import GeniusWSDL from "./GeniusWSDL";
 import GeniusReportingWSDL from "./GeniusReportingWSDL";
 import CreateSoapClientWithWSDL from "../CreateSoapClientWithWSDL";
@@ -84,7 +85,8 @@ export default class GeniusClient {
     const params = { TransportKey, Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    return await fetch(url)
+
+    return impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
   }
@@ -96,7 +98,7 @@ export default class GeniusClient {
     const params = { Action: "Status", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    return await fetch(url)
+    return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
   }
@@ -111,7 +113,9 @@ export default class GeniusClient {
     const params = { Action: "InitiateKeyedEntry", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -122,7 +126,9 @@ export default class GeniusClient {
     const params = { Action: "StartOrder", Format: "JSON", Order };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -142,7 +148,9 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -152,7 +160,9 @@ export default class GeniusClient {
     const params = { Action: "Cancel", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -163,7 +173,9 @@ export default class GeniusClient {
     const params = { Action: "AddItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -176,7 +188,9 @@ export default class GeniusClient {
     const params = { Action: "DiscountItem", Format: "JSON", ...discountItem };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -189,7 +203,9 @@ export default class GeniusClient {
     const params = { Action: "DeleteItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -206,7 +222,9 @@ export default class GeniusClient {
     };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -219,7 +237,9 @@ export default class GeniusClient {
     const params = { Action: "UpdateItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   async UpdateTotal(
@@ -228,7 +248,9 @@ export default class GeniusClient {
     const params = { Action: "UpdateTotal", Format: "JSON", ...updateParams };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await fetch(url).then(r => r.json().catch(e => e));
+    return await impatientFetch(url)
+      .then(r => r.json())
+      .catch(e => e);
   }
 
   /**
@@ -252,4 +274,14 @@ function makeQueryString(obj: any): string {
       return encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]);
     })
     .join("&");
+}
+
+/**
+ * A simple HTTP client that times out after the specified amount of time
+ */
+export async function impatientFetch(
+  url: string,
+  timeout = 7_000
+): Promise<Response> {
+  return await Bluebird.resolve(fetch(url)).timeout(timeout, "Timeout Error");
 }

@@ -9,6 +9,8 @@ import {
   CEDBoolean
 } from "../lib/Genius/definitions";
 
+import { impatientFetch } from "../src/Genius";
+
 describe("GeniusClient", () => {
   const config = {
     MerchantName: "TEST",
@@ -91,6 +93,34 @@ describe("GeniusClient", () => {
 
       const result = await client.StageTransaction(transaction);
       expect(result instanceof Error).to.be.true;
+    });
+  });
+
+  describe("impatientFetch", async () => {
+    it("A Timeout Error is thrown if the request takes to long", async () => {
+      nock("http://www.github.com")
+        .get("/noop")
+        .delayBody(2000)
+        .replyWithError("Timeout Error");
+
+      const result = await impatientFetch("http://www.github.com/noop", 1_000)
+        .then(resp => resp.json())
+        .catch(err => err.message);
+
+      expect(result).to.be.equal("Timeout Error");
+    });
+
+    it("A Timeout Error is NOT thrown when the specified time isn't exceeded", async () => {
+      nock("http://www.github.com")
+        .get("/noop")
+        .delayBody(1000)
+        .reply(200, "ok");
+
+      const result = await impatientFetch("http://www.github.com/noop", 2_000)
+        .then(resp => resp.text())
+        .catch(err => err.message);
+
+      expect(result).to.be.equal("ok");
     });
   });
 
