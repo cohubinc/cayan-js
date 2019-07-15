@@ -140,6 +140,12 @@ export interface ISaleRequest {
     ForceDuplicate?: boolean;
     Invoice?: IInvoice;
 }
+export interface IVoidRequest {
+    Token?: string;
+    RegisterNumber?: string;
+    MerchantTransactionId?: string;
+    CardAcceptorTerminalId?: number;
+}
 export interface IInvoice {
     TaxIndicator: TaxIndicator;
     ProductDescription: string;

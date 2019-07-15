@@ -1,6 +1,4 @@
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <soap:Body>
     <SaleResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
       <SaleResult>
@@ -9,16 +7,16 @@
         <AuthorizationCode>OK775C</AuthorizationCode>
         <TransactionDate>3/14/2016 7:57:22 PM</TransactionDate>
         <Amount>1.05</Amount>
-        <RemainingCardBalance/>
+        <RemainingCardBalance />
         <CardNumber>************0026</CardNumber>
         <Cardholder>John Doe</Cardholder>
         <CardType>4</CardType>
-        <FsaCard/>
+        <FsaCard />
         <ReaderEntryMode>1</ReaderEntryMode>
         <AvsResponse>Y</AvsResponse>
-        <CvResponse/>
-        <ErrorMessage/>
-        <ExtraData/>
+        <CvResponse />
+        <ErrorMessage />
+        <ExtraData />
         <Rfmiq>10000ABCDE</Rfmiq>
       </SaleResult>
     </SaleResponse>

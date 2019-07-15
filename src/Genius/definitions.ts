@@ -299,3 +299,126 @@ export interface ICancelTransactionResponse {
   ResponseMessage: string;
   AdditionalParameters: any;
 }
+
+export interface IDetailsByTransportKeyResponse {
+  Status: string; // The Status of the transaction, whether approved or declined. This value may also have other definitions depending on CardType and context.
+  ErrorMessage: string; // A message indicating why the transaction could not be processed.
+  TotalAmountApproved: string; // The amount of the transaction that was approved. If partial authorizations are enabled, this will be the authorized amount and may be different than the requested amount.
+  RequestedAmount: string; // The requested amount of the transaction.
+  ResponseType: string; // SINGLE, MULTI or COMPOUND. Typical credit, debit and EBT payment types will return SINGLE as the ResponseType. MULTI or COMPOUND response types are returned for additional payment types such as gift and loyalty.
+  PaymentDetails: { PaymentDetail: IPaymentDetail } | IPaymentDetail[]; // Collection of detail objects for the transaction processed. If more than one payment type was processed to complete the transaction, each sub-transaction will be in the collection. For example, if a $100 transaction is processed using a $30 gift card and $70 credit card transaction, there will be a payment detail for each one within the payment details object.
+  Invoice: IInvoice; // An optional field that specifies various data for level three processing-rates.
+  AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+
+export interface IPaymentDetail {
+  PaymentType:
+    | "UNKNOWN"
+    | "AMEX"
+    | "DISCOVER"
+    | "MASTERCARD"
+    | "VISA"
+    | "DEBIT"
+    | "EBT"
+    | "EGC"
+    | "WEX"
+    | "VOYAGER"
+    | "JCB"
+    | "CUP"
+    | "LU";
+  Status:
+    | "UNKNOWN"
+    | "APPROVED"
+    | "FAILED"
+    | "DECLINED"
+    | "DECLINED_DUPLICATE"
+    | "REFERRAL";
+  ErrorMessage: string;
+  TransactionType: "UNKNOWN" | "SALE" | "REFUND" | "AUTHORIZATION";
+  Token: string;
+  AuthorizationCode: string;
+  Customer: string;
+  Email: string;
+  PhoneNumber: string;
+  AccountNumber: string;
+  ExpirationDate: string;
+  EntryMode:
+    | "UNKNOWN"
+    | "MANUAL"
+    | "SWIPE"
+    | "AUTHORIZATION"
+    | "PROXIMITY"
+    | "BARCODE";
+  TransactionDate: string;
+  AmountDetail: IAmountDetail;
+  SignatureDetail: ISignatureDetail;
+  GiftDetail: IGiftCardDetail;
+  LoyaltyDetail: ILoyaltyDetail;
+  AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+
+export interface IAmountDetail {
+  AmountApproved: number;
+  AmountCharged: number;
+  TaxAmount: number;
+  TipAmount: number;
+  UserTipAmount: number;
+  DiscountAmount: number;
+  VoucherAmount: number;
+  RemainingCardBalance: number;
+}
+
+export interface ISignatureDetail {
+  SignatureType: string;
+  Signature: string;
+}
+
+export interface IGiftCardDetail {
+  Balance: number;
+}
+
+export interface ILoyaltyDetail {
+  Visits: number;
+  LastVisit: string;
+  LifetimeSpend: number;
+  Balance: number;
+}
+
+export interface IInvoice {
+  TaxIndicator: "NotProvided" | "Provided" | "Exempt"; // An indicator that specifies whether the transaction's primary amount includes or omits tax. Values are:
+  ProductDescription: string; // 0-100 Describes the item being purchased by the consumer.
+  DiscountAmount: number; // Decimal 0-100 The amount that the merchant deducts as a discount from the cost of the item.
+  ShippingAmount: number; // Decimal 0-100 If the merchant needs to ship the item, this is the amount of the transaction that the customer pays for shipping.
+  DutyAmount: number; // Decimal 0-100 If the merchant needs to ship the item, this is the amount of the transaction that the customer pays as duty when the shipment enters the destination country.
+  DestinationPostalCode: string; // 0-9 If the merchant needs to ship the item, this is the postal code of the customer’s delivery address.
+  DestinationCountryCode: string; // 0-3 If the merchant needs to ship the item, this is the country code of the customer’s delivery address.
+  ShipFromPostalCode: string; // 0-9 If the merchant needs to ship the item, this is the postal code of the location the merchant ships the item from.
+  LineItems: ILineItem[]; // The list of item level details for the transaction.
+}
+
+export interface ILineItem {
+  CommodityCode: string; // 0-30 The line item’s commodity code.
+  Description: string; // 0-100 The description of the line item.
+  Upc: string; // 0-12 The line item’s Universal Product Code.
+  Quantity: number; // Decimal 0-(9,4) The number of units that the line item contains. Units for the line item are specified in the UnitOfMeasure field.
+  UnitOfMeasure: string; // 0-50 The unit of measure for the contents of the line item.
+  UnitCost: number; // Decimal 	0-100 The cost of a single unit from the line item.
+  DiscountAmount: number; // Decimal 0-100 The amount that the merchant deducts as a discount from the cost of the line item.
+  TotalAmount: number; // Decimal 0-100 The total amount of the line item after the merchant deducts all tax and discounts.
+  TaxAmount: number; // Decimal 0-100 The tax amount of the line item that is tax.
+  ExtendedAmount: number; // Decimal 0-100 The extended amount of the line item.
+  DebitOrCreditIndicator: "Credit" | "Debit"; // An indicator of whether the line item is a credit or a debit. Values are:
+  NetOrGrossIndicator: "Net" | "Gross"; // An indicator of whether the line item includes tax (gross) or excludes tax (net). Values are:
+}
+
+export interface IAdditionalResponseParameters {
+  FsaCard: boolean;
+  EbtDetails: {
+    EbtType: "CASH" | "SNAP";
+    FnsId?: string; // FnsId is shown only when EbtType is SNAP;
+    Balances: {
+      CashAvailableBalance: number;
+      SnapAvailableBalance: number;
+    };
+  };
+}

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <soap:Body>
-    <AuthorizeResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
-      <AuthorizeResult>
+    <VoidResponse xmlns="http://schemas.merchantwarehouse.com/merchantware/v45/">
+      <VoidResult>
         <ApprovalStatus>APPROVED</ApprovalStatus>
-        <Token>1275522085</Token>
-        <AuthorizationCode>OK9999</AuthorizationCode>
-        <TransactionDate>10/2/2018 9:46:07 PM</TransactionDate>
-        <Amount>1.01</Amount>
+        <Token>608974</Token>
+        <AuthorizationCode>VOID</AuthorizationCode>
+        <TransactionDate>5/8/2019 4:16:51 PM</TransactionDate>
+        <Amount />
         <RemainingCardBalance />
-        <CardNumber>************0026</CardNumber>
+        <CardNumber />
         <Cardholder />
-        <CardType>4</CardType>
+        <CardType>0</CardType>
         <FsaCard />
-        <ReaderEntryMode>1</ReaderEntryMode>
+        <ReaderEntryMode>0</ReaderEntryMode>
         <AvsResponse />
         <CvResponse />
         <ErrorMessage />
         <ExtraData />
         <DebitTraceNumber />
-      </AuthorizeResult>
-    </AuthorizeResponse>
+      </VoidResult>
+    </VoidResponse>
   </soap:Body>
 </soap:Envelope>

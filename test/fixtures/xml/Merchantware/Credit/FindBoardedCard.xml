@@ -4,12 +4,12 @@
          <FindBoardedCardResult>
             <CardNumber>0026</CardNumber>
             <ExpirationDate>1218</ExpirationDate>
-            <Cardholder/>
+            <Cardholder />
             <CardType>4</CardType>
             <AvsStreetAddress>1 Federal Street</AvsStreetAddress>
             <AvsZipCode>02110</AvsZipCode>
-            <ErrorCode/>
-            <ErrorMessage/>
+            <ErrorCode />
+            <ErrorMessage />
             <Rfmiq>10000ABCDE</Rfmiq>
          </FindBoardedCardResult>
       </FindBoardedCardResponse>

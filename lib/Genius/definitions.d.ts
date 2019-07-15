@@ -258,3 +258,94 @@ export interface ICancelTransactionResponse {
     ResponseMessage: string;
     AdditionalParameters: any;
 }
+export interface IDetailsByTransportKeyResponse {
+    Status: string;
+    ErrorMessage: string;
+    TotalAmountApproved: string;
+    RequestedAmount: string;
+    ResponseType: string;
+    PaymentDetails: {
+        PaymentDetail: IPaymentDetail;
+    } | IPaymentDetail[];
+    Invoice: IInvoice;
+    AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+export interface IPaymentDetail {
+    PaymentType: "UNKNOWN" | "AMEX" | "DISCOVER" | "MASTERCARD" | "VISA" | "DEBIT" | "EBT" | "EGC" | "WEX" | "VOYAGER" | "JCB" | "CUP" | "LU";
+    Status: "UNKNOWN" | "APPROVED" | "FAILED" | "DECLINED" | "DECLINED_DUPLICATE" | "REFERRAL";
+    ErrorMessage: string;
+    TransactionType: "UNKNOWN" | "SALE" | "REFUND" | "AUTHORIZATION";
+    Token: string;
+    AuthorizationCode: string;
+    Customer: string;
+    Email: string;
+    PhoneNumber: string;
+    AccountNumber: string;
+    ExpirationDate: string;
+    EntryMode: "UNKNOWN" | "MANUAL" | "SWIPE" | "AUTHORIZATION" | "PROXIMITY" | "BARCODE";
+    TransactionDate: string;
+    AmountDetail: IAmountDetail;
+    SignatureDetail: ISignatureDetail;
+    GiftDetail: IGiftCardDetail;
+    LoyaltyDetail: ILoyaltyDetail;
+    AdditionalResponseParameters: IAdditionalResponseParameters;
+}
+export interface IAmountDetail {
+    AmountApproved: number;
+    AmountCharged: number;
+    TaxAmount: number;
+    TipAmount: number;
+    UserTipAmount: number;
+    DiscountAmount: number;
+    VoucherAmount: number;
+    RemainingCardBalance: number;
+}
+export interface ISignatureDetail {
+    SignatureType: string;
+    Signature: string;
+}
+export interface IGiftCardDetail {
+    Balance: number;
+}
+export interface ILoyaltyDetail {
+    Visits: number;
+    LastVisit: string;
+    LifetimeSpend: number;
+    Balance: number;
+}
+export interface IInvoice {
+    TaxIndicator: "NotProvided" | "Provided" | "Exempt";
+    ProductDescription: string;
+    DiscountAmount: number;
+    ShippingAmount: number;
+    DutyAmount: number;
+    DestinationPostalCode: string;
+    DestinationCountryCode: string;
+    ShipFromPostalCode: string;
+    LineItems: ILineItem[];
+}
+export interface ILineItem {
+    CommodityCode: string;
+    Description: string;
+    Upc: string;
+    Quantity: number;
+    UnitOfMeasure: string;
+    UnitCost: number;
+    DiscountAmount: number;
+    TotalAmount: number;
+    TaxAmount: number;
+    ExtendedAmount: number;
+    DebitOrCreditIndicator: "Credit" | "Debit";
+    NetOrGrossIndicator: "Net" | "Gross";
+}
+export interface IAdditionalResponseParameters {
+    FsaCard: boolean;
+    EbtDetails: {
+        EbtType: "CASH" | "SNAP";
+        FnsId?: string;
+        Balances: {
+            CashAvailableBalance: number;
+            SnapAvailableBalance: number;
+        };
+    };
+}
