@@ -15,5 +15,5 @@ export default class MerchantwareCreditClient {
     FindBoardedCard(Request: IVaultTokenRequest): Promise<Error | IVaultTokenResponse45>;
     UpdateBoardedCard(Request: IUpdateBoardedCardRequest): Promise<Error | IVaultBoardingResponse45>;
     Sale(PaymentData: IPaymentData, Request: ISaleRequest): Promise<Error | ITransactionResponse45>;
-    Void(Request: IVoidRequest): Promise<any>;
+    Void(Request: IVoidRequest): Promise<Error | ITransactionResponse45>;
 }

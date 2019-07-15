@@ -67,3 +67,7 @@ export default class GeniusClient {
      */
     DetailsByTransportKey(TransportKey: string): Promise<IDetailsByTransportKeyResponse>;
 }
+/**
+ * A simple HTTP client that times out after the specified amount of time
+ */
+export declare function impatientFetch(url: string, timeout?: number): Promise<Response>;
