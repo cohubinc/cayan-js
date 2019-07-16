@@ -15,7 +15,7 @@ export default class GeniusClient {
     /**
      * Check the status of the CED
      */
-    CheckStatus(): Promise<ICheckStatusResponse | Error>;
+    CheckStatus(timeout?: number): Promise<ICheckStatusResponse | Error>;
     /**
      * Initiates keyed entry on the CED
      * @param
@@ -35,7 +35,7 @@ export default class GeniusClient {
     /**
      * Cancels the current order and resets the screen back to an idle state
      */
-    Cancel(): Promise<ICancelTransactionResponse | Error>;
+    Cancel(timeout?: number): Promise<ICancelTransactionResponse | Error>;
     /**
      * Add an item to the screen. Also allows updating order totals.
      * @param item - The item to be added to the order. See IAddItemParameters

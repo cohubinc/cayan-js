@@ -87,7 +87,7 @@ export default class GeniusClient {
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
 
-    return impatientFetch(url)
+    return fetch(url)
       .then(r => r.json())
       .catch(e => e);
   }
@@ -95,11 +95,11 @@ export default class GeniusClient {
   /**
    * Check the status of the CED
    */
-  async CheckStatus(): Promise<ICheckStatusResponse | Error> {
+  async CheckStatus(timeout?: number): Promise<ICheckStatusResponse | Error> {
     const params = { Action: "Status", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
-    return await impatientFetch(url)
+    return await impatientFetch(url, timeout)
       .then(r => r.json())
       .catch(e => e);
   }
@@ -157,11 +157,13 @@ export default class GeniusClient {
   /**
    * Cancels the current order and resets the screen back to an idle state
    */
-  async Cancel(): Promise<ICancelTransactionResponse | Error> {
+  async Cancel(
+    timeout: number = 3_000
+  ): Promise<ICancelTransactionResponse | Error> {
     const params = { Action: "Cancel", Format: "JSON" };
     const queryString = makeQueryString(params);
     const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
-    return await impatientFetch(url)
+    return await impatientFetch(url, timeout)
       .then(r => r.json())
       .catch(e => e);
   }
@@ -283,7 +285,7 @@ function makeQueryString(obj: any): string {
  */
 export async function impatientFetch(
   url: string,
-  timeout = 7_000
+  timeout = 5_000
 ): Promise<Response> {
   return await Bluebird.resolve(fetch(url)).timeout(timeout, "Timeout Error");
 }
