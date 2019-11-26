@@ -44,7 +44,8 @@ describe("GeniusClient", () => {
         SoftwareVersion: "1",
         Amount: 1.01,
         OrderNumber: "TEST-1",
-        TaxAmount: 0.1
+        TaxAmount: 0.1,
+        EnablePartialAuthorization: false
       };
 
       nock("https://transport.merchantware.net")
@@ -80,7 +81,8 @@ describe("GeniusClient", () => {
         SoftwareVersion: "1",
         Amount: 1.01,
         OrderNumber: "TEST-1",
-        TaxAmount: 0.1
+        TaxAmount: 0.1,
+        EnablePartialAuthorization: false
       };
 
       nock("https://transport.merchantware.net")

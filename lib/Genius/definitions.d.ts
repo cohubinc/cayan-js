@@ -70,6 +70,7 @@ export interface ITransportRequest {
     TerminalId?: string;
     PoNumber?: string;
     CustomerCode?: string;
+    EnablePartialAuthorization: boolean;
 }
 export interface IStartOrderParameters {
     Order: string;
