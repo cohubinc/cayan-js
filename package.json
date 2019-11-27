@@ -4,7 +4,7 @@
   "description": "Javascript library for Cayan API's",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && cp -R src/wsdl lib/wsdl",
+    "build": "yarn tsc && cp -R src/wsdl lib/wsdl",
     "test": "npm run build && mocha -r ts-node/register test/**/*.ts"
   },
   "author": "Cohub, Inc <engineering@cohub.com> (https://cohub.com)",
