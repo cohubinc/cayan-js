@@ -45,6 +45,20 @@ export interface IAuthorizationRequest {
     MerchantTransactionId?: string;
     RegisterNumber: string;
     invoice?: IInvoice;
+    InvoiceNumber?: string;
+    CardCaptureCapability?: string;
+    PinAuthenticationCapability?: string;
+    PosConditionCode?: string;
+    PosEntryMode?: string;
+    TerminalCategoryCode?: string;
+    TerminalEntryCapability?: string;
+    TerminalLocationIndicator?: string;
+    EnablePartialAuthorization?: boolean;
+    TaxAmount?: string;
+    PurchaseOrderNumber?: string;
+    CustomerCode?: string;
+    CustomerEmailAddress?: string;
+    ForceDuplicate?: boolean;
 }
 export interface ICaptureRequest {
     Token: string;
