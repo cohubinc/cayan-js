@@ -85,7 +85,7 @@ export default class GeniusClient {
   ): Promise<IInitiateTransactionResult | Error> {
     const params = { TransportKey, Format: "JSON" };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v2/pos?${queryString}`;
 
     return fetch(url)
       .then(r => r.json())
@@ -98,7 +98,7 @@ export default class GeniusClient {
   async CheckStatus(timeout?: number): Promise<ICheckStatusResponse | Error> {
     const params = { Action: "Status", Format: "JSON" };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v2/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v2/pos?${queryString}`;
     return await impatientFetch(url, timeout)
       .then(r => r.json())
       .catch(e => e);
@@ -113,7 +113,7 @@ export default class GeniusClient {
   ): Promise<IStartOrderResponse | Error> {
     const params = { Action: "InitiateKeyedEntry", Format: "JSON" };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -126,7 +126,7 @@ export default class GeniusClient {
   async StartOrder(Order: string): Promise<IStartOrderResponse | Error> {
     const params = { Action: "StartOrder", Format: "JSON", Order };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -148,7 +148,7 @@ export default class GeniusClient {
       ExternalPaymentType: externalPaymentType
     };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -162,7 +162,7 @@ export default class GeniusClient {
   ): Promise<ICancelTransactionResponse | Error> {
     const params = { Action: "Cancel", Format: "JSON" };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url, timeout)
       .then(r => r.json())
       .catch(e => e);
@@ -175,7 +175,7 @@ export default class GeniusClient {
   async AddItem(item: IAddItemParameters): Promise<IAddItemResponse | Error> {
     const params = { Action: "AddItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -190,7 +190,7 @@ export default class GeniusClient {
   ): Promise<IDiscountItemResponse | Error> {
     const params = { Action: "DiscountItem", Format: "JSON", ...discountItem };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -205,7 +205,7 @@ export default class GeniusClient {
   ): Promise<IDeleteItemResponse | Error> {
     const params = { Action: "DeleteItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -224,7 +224,7 @@ export default class GeniusClient {
       ...deleteParams
     };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -239,7 +239,7 @@ export default class GeniusClient {
   ): Promise<IUpdateItemResponse | Error> {
     const params = { Action: "UpdateItem", Format: "JSON", ...item };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
@@ -250,7 +250,7 @@ export default class GeniusClient {
   ): Promise<IUpdateTotalResponse | Error> {
     const params = { Action: "UpdateTotal", Format: "JSON", ...updateParams };
     const queryString = makeQueryString(params);
-    const url = `http://${this.config.CEDHostname}:8080/v1/pos?${queryString}`;
+    const url = `https://${this.config.CEDHostname}:8443/v1/pos?${queryString}`;
     return await impatientFetch(url)
       .then(r => r.json())
       .catch(e => e);
